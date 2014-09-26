@@ -5,7 +5,13 @@
         <div class="module module-sm">
           <p class="petition-title-wrapper">
             <p><a class="title" href="{{pathFor 'postPage' _id=post._id}}">{{post.title}}</a></p>
-            <div class="footer-subtitle">{{post.author}} <br> {{ submitted_at }}</div>
+            <div class="footer-subtitle">
+              {{post.author}}
+              <br>
+              <abbr class="petition-timestamp" title="{{formatDate post.created_at "l LT"}}">
+                {{relativeDate post.created_at }}
+              </abbr>
+            </div>
           </p>
           {{#if isInRole 'admin' 'moderator'}}
             <p>
