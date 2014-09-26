@@ -12,7 +12,6 @@ Handlebars.registerHelper('breaklines', function (text) {
 });
 
 Handlebars.registerHelper('formatDate', function (datetime, format) {
-  format = format || "l LT";
   if (moment) {
     return moment(datetime).format(format);
   }
