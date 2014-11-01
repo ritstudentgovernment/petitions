@@ -20,6 +20,14 @@ Handlebars.registerHelper('formatDate', function (datetime, format) {
   }
 });
 
+Handlebars.registerHelper('relativeDate', function (datetime) {
+  if(moment) {
+    return moment(datetime).fromNow();
+  } else {
+    return datetime;
+  }
+});
+
 Handlebars.registerHelper('pluralize', function(n, thing) {
   if (n === 1) {
     return '1 ' + thing;

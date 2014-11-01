@@ -18,10 +18,6 @@ Template.postPage.helpers({
     timeTick.depend();
     return new moment(this.post.responded_at).fromNow().toUpperCase();
   },
-  'submitted_at': function () {
-    timeTick.depend();
-    return new moment(this.post.submitted).fromNow().toUpperCase();
-  },
   'initials': function () {
     return Meteor.users.find({
       '_id': {
