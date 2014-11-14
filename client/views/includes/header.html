@@ -1,9 +1,9 @@
 <template name="header">
-  <nav class="header-background navbar navbar-default" role="navigation">
+  <nav class="header-background navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
       <div class="navbar-header">
         <a class="navbar-brand" href="{{pathFor 'index'}}" style="margin-top: -3px;">
-          <img src="/pawprints.svg"/>
+          <img src="/petitions.svg"/>
         </a>
         <button type="button"
                 class="navbar-toggle"
@@ -29,13 +29,7 @@
               Responses
             </a>
           </li>
-          <li class="{{ isActiveRoute 'about' }} {{ isActiveRoute 'petitionProcess' }} {{ isActiveRoute 'moderation' }} {{ isActiveRoute 'api' }}">
-            <a href="{{pathFor 'about'}}">
-              <span class="glyphicon glyphicon-info-sign"></span>
-              About
-            </a>
-          </li>
-          <li class="{{ isActiveRoute 'postSubmit' }}">
+         <li class="{{ isActiveRoute 'postSubmit' }}">
             <a href="{{pathFor 'postSubmit'}}">
               <span class="glyphicon glyphicon-plus"></span>
               Create
@@ -92,6 +86,12 @@
               </a>
             </li>
           {{/if}}
+          <li class="{{ isActiveRoute 'about' }} {{ isActiveRoute 'petitionProcess' }} {{ isActiveRoute 'moderation' }} {{ isActiveRoute 'api' }}">
+            <a href="{{pathFor 'about'}}">
+              <span class="glyphicon glyphicon-info-sign"></span>
+              About
+            </a>
+          </li>
         </ul>
       </div>
     </div>

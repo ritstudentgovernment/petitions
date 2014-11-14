@@ -33,7 +33,7 @@
     {{#if empty posts}}
     {{else}}
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 center-xs">
-        <h2 style="display: inline-block; margin-bottom: 0;"
+        <h2 style="color: white; display: inline-block; margin-bottom: 0;"
             data-toggle="tooltip"
             data-placement="bottom"
             title="{{description}}">
@@ -46,7 +46,7 @@
         
       </div>
       <div class="col-xs-12 col-sm-6 col-md-4 col-md-offset-4 col-lg-3 col-lg-offset-6">
-        <span class="pull-left">Sort By</span>
+        <span class="pull-left" style="color: white;">Sort By</span>
         <select id="petition-order" class="form-control input-lg">
           <option {{selected postOrder "submitted"}} value="submitted">Most Recent</option>
           <option {{selected postOrder "votes"}} value="votes">Most Signatures</option>

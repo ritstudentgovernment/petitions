@@ -25,6 +25,11 @@ input:not([type="checkbox"]):not([type="radio"]).inverse, textarea.inverse {
   padding: 10px;
 }
 
+input[type="text"]:focus, input[type="password"]:focus {
+   box-shadow: 0 0 10px #f7001f;
+   border: 1px #f7001f;
+}
+
 .application-content {  
   @media (max-width: @screen-sm-min) { 
     margin: 15px inherit;
