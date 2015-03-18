@@ -12,7 +12,7 @@ Usage (Local Development)
 - Copy `settings.json.sample` to `settings.json` and edit appropriately. All properties defined in `settings.json.sample` are required.
 - From the root directory, run `meteor --settings settings.json`.
 
-Usage (Production Enviornment)
+Usage (Production Environment)
 ==============================
 
 - Check out the node section of the [config] repository for example systemd files and nginx configuration files.
