@@ -104,13 +104,4 @@
       </div>
     </div>
   </nav>
-  <script>
-  //collapses the navbar when changing pages, becuase there is no actual navigation to reset state
-  $(document).on('click.nav','.navbar-collapse.in',function(e){
-    if( $(e.target).is('a') ) {
-        $(this).collapse('hide');
-        //$(this).removeClass('in').addClass('collapse');
-    }
-});
-  </script>
 </template>
