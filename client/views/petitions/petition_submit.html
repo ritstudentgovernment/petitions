@@ -1,40 +1,46 @@
 <template name="petitionSubmit">
-  <div class="">
-    <div class="container-fluid">
-      <div class="row-fluid">
+  <div class="page">
+    <div class="container">
+      <div class="row">
         <form class="main">
-          <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
-            <h2><strong>Create a New Petition</strong></h2>
-
-            <div class="panel panel-default panel-body">
+          <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+            <h2 class="petition-align-fix"><strong>Compose Petition</strong></h2>
+            <div class="panel panel-default panel-body petition-align-fix">
               <p>We recommend reading our <a href="{{pathFor 'petitionProcess'}}">one-minute guide</a> on the Petition Process prior to making a submission.</p>
               <div class="alert alert-warning no-margin">Be careful! You can't edit or delete a petition once it is submitted.</div>
-            </div>
-
+              <br />
               <input name="title"
                      class="form-group form-control input-lg"
                      maxlength="70"
-                     placeholder="My Petition's Name"
+                     placeholder="Action-oriented, one-line statement."
                      type="text"
-                     value="{{ session 'petition.title' }}">
-              <input id="tags" style="width: 100%; margin-bottom: 10px;">
+                     value="{{ session 'petition.title' }}" />
+              <input id="tags" style="width: 100%; margin-bottom: 10px;" />
               <textarea name="description"
                         class="form-group form-control input-lg"
                         maxlength="4000"
-                        placeholder="My Petition's Description"
+                        placeholder="Explanation and reasoning behind petition. Why should someone sign? How will it improve the community?"
                         type="text"
-                        rows="15"
+                        rows="10"
                         value="{{ session 'petition.description' }}"></textarea>
-            <h2><strong>Preview Petition Card</strong></h2>
+              <div class="visible-sm alert alert-warning">Your full name will be made public with this petition. If you aren't comfortable with that, consider working with your SG senator/rep or a relevant administrator to have it posted from another account.</div>
+            </div>
           </div>
-          <div class="petitions col-sm-10 col-sm-offset-1 col-md-9 col-md-offset-3">
+          <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+            <h2 class="petition-align-fix" style="margin-bottom:-1px;"><strong>Preview</strong></h2>
             {{> petitionCard petition=emptyPetition }}
+            {{> petitionCard petition=inProgressPetition }}
+            {{> petitionCard petition=respondedPetition }}
           </div>
-          <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
-            <p><input type="submit"
+          <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+              <div class="visible-xs hidden-sm hidden-md hidden-lg alert alert-warning petition-align-fix">Your full name will be made public with this petition. If you aren't comfortable with that, consider working with your SG senator/rep or a relevant administrator to have it posted from another account.</div>
+            <p class="petition-align-fix">
+              <input type="submit"
                      class="form-group btn btn-lg btn-primary"
                      value="Submit"
-                     style="width: 100%;"></p>
+                     style="width: 100%;" />
+            </p>
+            <div class="hidden-xs hidden-sm visible-md visible-lg alert alert-warning petition-align-fix">Your full name will be made public with this petition. If you aren't comfortable with that, consider working with your SG senator/rep or a relevant administrator to have it posted from another account.</div>
           </div>
         </form>
       </div>

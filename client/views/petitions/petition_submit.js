@@ -16,6 +16,43 @@ Template.petitionSubmit.helpers({
   }
 });
 
+Template.petitionSubmit.helpers({
+  'respondedPetition': function() {
+
+    return {
+      votes: 1,
+      author: Meteor.user().profile.name,
+      title: Session.get('petition.title'),
+      status: 'responded',
+      tag_ids: Session.get('petition.tag_ids')
+    }
+  },
+  'title': function() {
+    return Session.get('petition.title');
+  },
+  'author': function() {
+    return Meteor.user().profile.displayName;
+  }
+});
+Template.petitionSubmit.helpers({
+  'inProgressPetition': function() {
+
+    return {
+      votes: 1,
+      author: Meteor.user().profile.name,
+      title: Session.get('petition.title'),
+      status: 'waiting-for-reply',
+      tag_ids: Session.get('petition.tag_ids')
+    }
+  },
+  'title': function() {
+    return Session.get('petition.title');
+  },
+  'author': function() {
+    return Meteor.user().profile.displayName;
+  }
+});
+
 Template.petitionSubmit.events({
   'submit form': function(e) {
     e.preventDefault();

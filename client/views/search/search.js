@@ -26,4 +26,5 @@ Template.search.helpers({
 
 Template.search.rendered = function () {
   $("#search").attr('autocomplete', 'on');
+  $('#search').focus();
 }
