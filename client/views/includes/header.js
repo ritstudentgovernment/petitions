@@ -23,3 +23,12 @@ Template.header.helpers({
     }
   }
 })
+
+//Collapses the navbar when navigating.
+//In a traditional application, the state would be reset on navigation.
+//Becuase the page is not reloaded, navbar needs to be manually collapsed.
+$(document).on('click.nav','.navbar-collapse.in',function(e){
+  if( $(e.target).is('a') ) {
+      $(this).collapse('hide');
+  }
+});

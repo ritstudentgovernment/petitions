@@ -1,8 +1,10 @@
 <template name="layout">
   {{> header}}
-  {{> yield}}
-  {{> footer}}
-  {{> login}}
-  {{> postSearch}}
-  {{> errors}}
+  <div style="margin-top:50px">
+    {{> yield}}
+    {{> footer}}
+    {{> login}}
+    {{> postSearch}}
+    {{> errors}}
+  </div>
 </template>
