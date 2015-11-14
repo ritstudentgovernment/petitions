@@ -3,7 +3,7 @@
  *  Structure:
  *
  *    {
- *      postsCount:            <integer>, // Petition count
+ *      petitionsCount:            <integer>, // Petition count
  *      minimumThreshold:      <integer>, // Current minimum threshold
  *      threshold_updated_at:  <integer>  // Last datetime threshold changed
  *    }

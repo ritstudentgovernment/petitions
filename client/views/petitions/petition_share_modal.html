@@ -1,6 +1,6 @@
-<template name="postShareModal">
+<template name="petitionShareModal">
    <div class="modal fade"
-       id="postShareModal"
+       id="petitionShareModal"
        tabindex="-1"
        role="dialog"
        aria-labelledby="myModalLabel"
@@ -19,7 +19,7 @@
           </div>
           <div class="modal-body text-center" style="font-size: 16px;">
             <p>You're only {{pluralize signaturesRemaining "signature"}}{{percentRemaining}} away from an official response!</p>
-            <p>Share this petition to increase your chances of reaching {{pluralize post.minimumVotes "signature"}}.</p>
+            <p>Share this petition to increase your chances of reaching {{pluralize petition.minimumVotes "signature"}}.</p>
             <p>
               <a href="#"><img class="social-icon-lg" social="facebook" src="../facebook.svg"></a>
               <a href="#"><img class="social-icon-lg" social="twitter" src="../twitter.svg"></a>

@@ -13,19 +13,19 @@ Meteor.setInterval(function () {
 }, 1000);
 
 
-Template.postPage.helpers({
+Template.petitionPage.helpers({
   'responded_at': function () {
     timeTick.depend();
-    return new moment(this.post.responded_at).fromNow().toUpperCase();
+    return new moment(this.petition.responded_at).fromNow().toUpperCase();
   },
   'submitted_at': function () {
     timeTick.depend();
-    return new moment(this.post.submitted).fromNow().toUpperCase();
+    return new moment(this.petition.submitted).fromNow().toUpperCase();
   },
   'initials': function () {
     return Meteor.users.find({
       '_id': {
-        $in: this.post.upvoters
+        $in: this.petition.upvoters
       }
     }).fetch().map(function (user) {
       if (!user.profile.initials) {
@@ -36,37 +36,37 @@ Template.postPage.helpers({
     });
   },
   'progress': function () {
-    if (this.post.votes > this.post.minimumVotes) {
+    if (this.petition.votes > this.petition.minimumVotes) {
       return 100;
     } else {
-      return (this.post.votes / this.post.minimumVotes) * 100;
+      return (this.petition.votes / this.petition.minimumVotes) * 100;
     }
   },
   'goalReachedClass': function () {
-    return this.post.votes >= this.post.minimumVotes ? 'goal-reached' : '';
+    return this.petition.votes >= this.petition.minimumVotes ? 'goal-reached' : '';
   },
   'mustReachDate': function() {
-    return new moment(this.post.submitted).add(1, 'month').format('ll');
+    return new moment(this.petition.submitted).add(1, 'month').format('ll');
   },
   'petitionStatus': function () {
-    var post = Posts.findOne();
-    if (post.status == "waiting-for-reply") {
+    var petition = Petitions.findOne();
+    if (petition.status == "waiting-for-reply") {
       return {
         title: "In Progress",
         description: "This petition is being reviewed by Student Government."
       };
-    } else if (post.status == "responded") {
+    } else if (petition.status == "responded") {
       return {
         title: "Responded",
         description: "This petition has recieved an official response."
       };
     } else {
-      if (post.votes >= post.minimumVotes) {
+      if (petition.votes >= petition.minimumVotes) {
         return {
           title: "Goal Met",
           description: "This petition has met its signature goal, but has not yet been reviewed by Student Government."
         };
-      } else if (moment(post.submitted).isBefore(moment().subtract(1, 'month'))) {
+      } else if (moment(petition.submitted).isBefore(moment().subtract(1, 'month'))) {
         return {
           title: "Expired",
           description: "This petition didn't meet it's minimum signature goal within one month."
@@ -74,24 +74,24 @@ Template.postPage.helpers({
       } else {
         return {
           title: "Goal Not Met",
-          description: "This petition is below its signature threshold of " + post.minimumVotes + "."
+          description: "This petition is below its signature threshold of " + petition.minimumVotes + "."
         };
       }
     }
   }
 });
 
-Template.postPage.events({
+Template.petitionPage.events({
   'click *[social]': function (e) {
     var network = $(e.currentTarget).attr("social");
     var url = social_links[network] + this.url;
-    GAnalytics.event("post", "share", network);
+    GAnalytics.event("petition", "share", network);
     window.open(url);
   },
   'click #approve' : function(e){
     e.preventDefault();
-    var _id = this.post._id
-    Meteor.call('changePendingPost', _id, true, function(error) {
+    var _id = this.petition._id
+    Meteor.call('changePendingPetition', _id, true, function(error) {
       if (error) {
         throwError(error.reason);
       } else {
@@ -101,11 +101,11 @@ Template.postPage.events({
   }
 });
 
-Template.postPage.rendered = function () {
+Template.petitionPage.rendered = function () {
   Deps.autorun( function () {
-    var post = Posts.findOne();
+    var petition = Petitions.findOne();
     $('.petition-status').tooltip('destroy');
-    $('.petition-status').tooltip({title: Template.postPage.__helpers[" petitionStatus"]().description});
+    $('.petition-status').tooltip({title: Template.petitionPage.__helpers[" petitionStatus"]().description});
     $('.petition-expires').tooltip();
   });
 }

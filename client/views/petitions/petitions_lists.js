@@ -1,9 +1,9 @@
 Template.petitionGroup.events({
   'change #petition-order': function(evt) {
-     Session.set("postOrder", evt.currentTarget.value);
+     Session.set("petitionOrder", evt.currentTarget.value);
   },
   'click #load-more': function () {
-    Session.set('postsLimit', Session.get('postsLimit') + 12);
+    Session.set('petitionsLimit', Session.get('petitionsLimit') + 12);
   },
   'click .tag-item': function (e) {
     if(e.target.id == 'all'){

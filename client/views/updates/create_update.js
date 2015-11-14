@@ -14,7 +14,7 @@ Template.createUpdate.events({
 
     var updateAttrs = {
       _id: this.update._id,
-      postId: this.post._id,
+      petitionId: this.petition._id,
       title: $(e.target).find('[name=title]').val(),
       description: $(e.target).find('[name=description]').val()
     }

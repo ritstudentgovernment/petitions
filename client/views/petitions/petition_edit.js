@@ -1,39 +1,39 @@
-Template.postEdit.events({
+Template.petitionEdit.events({
   'submit #petitionForm': function(e) {
     e.preventDefault();
-    var postProperties = {
+    var petitionProperties = {
       title: $(e.target).find('[name=title]').val(),
       description: $(e.target).find('[name=description]').val(),
       response: $(e.target).find('[name=response]').val(),
       tag_ids: _.pluck($('#s2id_tags').select2('data'), '_id')
     };
-    Meteor.call('edit', this.post._id, postProperties, function (err) {
+    Meteor.call('edit', this.petition._id, petitionProperties, function (err) {
       if (err) {
-        GAnalytics.event("post", "edit", err.reason);
+        GAnalytics.event("petition", "edit", err.reason);
         throwError(err.reason);
       } else {
         throwError("Petition saved.");
-        GAnalytics.event("post", "edit");
+        GAnalytics.event("petition", "edit");
       }
     });
   },
   'click .delete-petition': function(e) {
     e.preventDefault();
     if (confirm("Delete this petition? Consider unpublishing it instead.")) {
-      Meteor.call('delete', this.post._id, function (err) {
+      Meteor.call('delete', this.petition._id, function (err) {
         if (err) {
-          GAnalytics.event("post", "delete", err.reason);
+          GAnalytics.event("petition", "delete", err.reason);
           throwError(err.reason);
         } else {
-          GAnalytics.event("post", "delete");
-          Router.go('postsList');
+          GAnalytics.event("petition", "delete");
+          Router.go('petitionsList');
         }
       });
     }
   }
 });
 
-Template.postEdit.rendered = function () {
+Template.petitionEdit.rendered = function () {
   var _this = this;
   Deps.autorun(function () {
     $('#tags').select2({
@@ -47,7 +47,7 @@ Template.postEdit.rendered = function () {
       formatResult: function (object, container, query) { return object.name; },
       formatNoMatches: function (object) { return "No tags found." },
       formatSelectionTooBig: function (object) { return "You can only select up to 3 tags." }
-    }).select2('val', _.pluck(Tags.find({_id: {$in: this.data.post.tag_ids}}).fetch(), '_id'));
+    }).select2('val', _.pluck(Tags.find({_id: {$in: this.data.petition.tag_ids}}).fetch(), '_id'));
     $('.select2-search-field>input').addClass("input");
   }.bind(this));
 };
@@ -57,10 +57,10 @@ Template.petitionPublish.events({
     e.preventDefault();
     Meteor.call('changePublishStatus', this._id, function (err) {
       if (err) {
-        GAnalytics.event("post", "changePublishStatus", err.reason);
+        GAnalytics.event("petition", "changePublishStatus", err.reason);
         throwError(err.reason);
       } else {
-        GAnalytics.event("post", "changePublishStatus");
+        GAnalytics.event("petition", "changePublishStatus");
       }
     });
   }

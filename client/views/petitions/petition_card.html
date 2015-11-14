@@ -1,20 +1,20 @@
-<template name="postCard">
+<template name="petitionCard">
   <div class="square col-xs-12 col-sm-6 col-md-4 col-lg-4">
-    <div class="square-content {{ post.status }}">
-      <h4 class="petition-sign-count">{{pluralize post.votes "Signature"}}</h4>
+    <div class="square-content {{ petition.status }}">
+      <h4 class="petition-sign-count">{{pluralize petition.votes "Signature"}}</h4>
       <h3 class="petition-title">
         {{#if isExpired this}}
-          <a href="{{pathFor 'postPage' _id=post._id }}"  style="color: #513127">
-            {{post.title}}
+          <a href="{{pathFor 'petitionPage' _id=petition._id }}"  style="color: #513127">
+            {{petition.title}}
           </a>
           {{else}}
-          <a href="{{pathFor 'postPage' _id=post._id }}">
-            {{post.title}}
+          <a href="{{pathFor 'petitionPage' _id=petition._id }}">
+            {{petition.title}}
           </a>
         {{/if}}
       </h3>
       <p>
-      {{#each post.tag_ids}}
+      {{#each petition.tag_ids}}
         {{#with tag this}}
             {{#if isExpired ../..}}
               <a id="card" href="" name="{{this.name}}" class="label label-success card-tag">{{upcase this.name}}</a>

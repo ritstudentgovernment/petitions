@@ -1,9 +1,9 @@
-Posts = new Meteor.Collection('posts');
+Petitions = new Meteor.Collection('petitions');
 
 if (Meteor.isServer)
-  Posts._ensureIndex({title: 1}, {unique: 1});
+  Petitions._ensureIndex({title: 1}, {unique: 1});
 
-Posts.initEasySearch(
+Petitions.initEasySearch(
   [ 'title', 'description', 'author' ],
   {
     'limit' : 50,
@@ -11,55 +11,55 @@ Posts.initEasySearch(
   }
 );
 
-var validatePostOnCreate = function validatePostOnCreate (postAttributes) {
+var validatePetitionOnCreate = function validatePetitionOnCreate (petitionAttributes) {
 
   // ensure title is unique
-  if (Posts.findOne({title: postAttributes.title}))
+  if (Petitions.findOne({title: petitionAttributes.title}))
     throw new Meteor.Error(422, 'This title has already been used. Write a different one.');
 
 };
 
-var validatePost = function validatePost (postAttributes) {
+var validatePetition = function validatePetition (petitionAttributes) {
 
   // ensure the user is logged in
   if (!Meteor.user())
     throw new Meteor.Error(401, "You need to login to do that.");
 
-  // ensure the post has a title
-  if (!postAttributes.title || !postAttributes.title.trim())
+  // ensure the petition has a title
+  if (!petitionAttributes.title || !petitionAttributes.title.trim())
     throw new Meteor.Error(422, 'Please fill in a \n title.');
 
-  var titleLength = postAttributes.title.length;
+  var titleLength = petitionAttributes.title.length;
   if (titleLength > 70)
     throw new Meteor.Error(422, 'Title must not exceed 70 characters. Currently: ' + titleLength );
 
-  // ensure the post has at least one tag
-  if (!postAttributes.tag_ids || postAttributes.tag_ids.length == 0)
+  // ensure the petition has at least one tag
+  if (!petitionAttributes.tag_ids || petitionAttributes.tag_ids.length == 0)
     throw new Meteor.Error(422, 'Please add at least one tag to the petition.');
 
-  if (postAttributes.tag_ids.length > 3)
+  if (petitionAttributes.tag_ids.length > 3)
     throw new Meteor.Error(422, 'Petitions are limited to at most 3 tags.');
 
-  // ensure the post has a description
-  if (!postAttributes.description || !postAttributes.description.trim())
+  // ensure the petition has a description
+  if (!petitionAttributes.description || !petitionAttributes.description.trim())
     throw new Meteor.Error(422, 'Please fill in a description.');
 
-  var descriptionLength = postAttributes.title.length;
+  var descriptionLength = petitionAttributes.title.length;
   if (descriptionLength > 4000)
     throw new Meteor.Error(422, 'Description must not exceed 4000 characters. Currently: ' + descriptionLength );
 };
 
 Meteor.methods({
-  post: function(postAttributes) {
+  petition: function(petitionAttributes) {
 
-    validatePost(postAttributes);
-    validatePostOnCreate(postAttributes);
+    validatePetition(petitionAttributes);
+    validatePetitionOnCreate(petitionAttributes);
 
     var user = Meteor.user();
     var publishByDefault = !(Singleton.findOne().moderation);
 
     // pick out the whitelisted keys
-    var post = _.extend(_.pick(postAttributes, 'title', 'description', 'tag_ids'), {
+    var petition = _.extend(_.pick(petitionAttributes, 'title', 'description', 'tag_ids'), {
       userId: user._id,
       author: user.profile.name,
       submitted: new Date().getTime(),
@@ -70,36 +70,36 @@ Meteor.methods({
       pending: Singleton.findOne().moderation
     });
 
-    var postId = Posts.insert(post);
+    var petitionId = Petitions.insert(petition);
 
-    Singleton.update({}, {$inc: {postsCount: 1}});
+    Singleton.update({}, {$inc: {petitionsCount: 1}});
 
-    return postId;
+    return petitionId;
   },
 
-  sign: function(postId) {
+  sign: function(petitionId) {
     var user = Meteor.user();
 
     if (!user)
       throw new Meteor.Error(401, "You need to login to sign a petition.");
 
-    var post = Posts.findOne(postId);
+    var petition = Petitions.findOne(petitionId);
 
-    if (!post.published)
+    if (!petition.published)
       throw new Meteor.Error(401, "This petition is not published.");
 
-    if (moment(post.submitted).isBefore(moment().subtract(1, 'month')))
+    if (moment(petition.submitted).isBefore(moment().subtract(1, 'month')))
       throw new Meteor.Error(401, "This petition has expired.");
 
-    Posts.update({
-      _id: postId,
+    Petitions.update({
+      _id: petitionId,
       upvoters: {$ne: user._id}
     }, {
       $addToSet: {upvoters: user._id},
       $inc: {votes: 1}
     });
 
-    if (post.votes === post.minimumVotes && Meteor.isServer) {
+    if (petition.votes === petition.minimumVotes && Meteor.isServer) {
       var users = Meteor.users.find({roles: {$in: ['notify-threshold-reached']}});
       var emails = users.map(function (user) { return user.username + "@rit.edu"; });
 
@@ -108,8 +108,8 @@ Meteor.methods({
           to: emails,
           from: "sgnoreply@rit.edu",
           subject: "PawPrints - Petition Reaches Signature Threshold",
-          text: "Petition \"" + post.title + "\" by " + post.author + " has reached its minimum signature goal: \n\n" +
-                Meteor.settings.public.root_url + "/petitions/" + postId +
+          text: "Petition \"" + petition.title + "\" by " + petition.author + " has reached its minimum signature goal: \n\n" +
+                Meteor.settings.public.root_url + "/petitions/" + petitionId +
                 "\n\nThanks, \nRIT Student Government"
         });
       }
@@ -117,14 +117,14 @@ Meteor.methods({
 
   },
 
-  edit: function (postId, postAttributes) {
+  edit: function (petitionId, petitionAttributes) {
 
-    var oldPost = Posts.findOne(postId, {
+    var oldPetition = Petitions.findOne(petitionId, {
                     fields: { response: 1,
                               upvoters: 1,
                               author: 1 }});
 
-    validatePost(postAttributes);
+    validatePetition(petitionAttributes);
 
     var user = Meteor.user();
 
@@ -132,24 +132,24 @@ Meteor.methods({
       throw new Meteor.Error(403, "You are not authorized to edit petitions.");
 
     // pick out the whitelisted keys
-    var post = _.extend(_.pick(postAttributes, 'title', 'description', 'response', 'status', 'tag_ids'));
+    var petition = _.extend(_.pick(petitionAttributes, 'title', 'description', 'response', 'status', 'tag_ids'));
 
-    if (_.isEmpty(post.response)) {
-      delete post.response;
+    if (_.isEmpty(petition.response)) {
+      delete petition.response;
     } else {
-      post.responded_at = new Date().getTime();
+      petition.responded_at = new Date().getTime();
     }
 
-    Posts.update(postId, {$set: post });
+    Petitions.update(petitionId, {$set: petition });
 
-    if (_.isEmpty(oldPost.response) && !_.isEmpty(post.response)) {
+    if (_.isEmpty(oldPetition.response) && !_.isEmpty(petition.response)) {
 
-      Posts.update(postId, {$set: {status: "responded"}});
+      Petitions.update(petitionId, {$set: {status: "responded"}});
 
       this.unblock();
 
       var users = Meteor.users.find({$and: [{'notify.response': true},
-                                           {_id: {$in: oldPost.upvoters}}]},
+                                           {_id: {$in: oldPetition.upvoters}}]},
                                     {fields: {username: 1}});
 
       var emails = users.map(function (user) { return user.username + "@rit.edu"; });
@@ -160,34 +160,34 @@ Meteor.methods({
         from: "sgnoreply@rit.edu",
         subject: "PawPrints - A petition you signed has received a response",
         text: "Hello, \n\n" +
-              "Petition \"" + post.title + "\" by " + oldPost.author + " has recieved a response: \n\n" +
-              Meteor.settings.public.root_url + "/petitions/" + oldPost._id +
+              "Petition \"" + petition.title + "\" by " + oldPetition.author + " has recieved a response: \n\n" +
+              Meteor.settings.public.root_url + "/petitions/" + oldPetition._id +
               "\n\nThanks, \nRIT Student Government"
       });
     }
   },
-  delete: function (postId) {
+  delete: function (petitionId) {
 
     var user = Meteor.user();
 
     if (!Roles.userIsInRole(user, ['admin']))
       throw new Meteor.Error(403, "You are not authorized to delete petitions.");
 
-    Posts.remove(postId);
+    Petitions.remove(petitionId);
 
-    Singleton.update({}, {$inc: {postsCount: -1}});
+    Singleton.update({}, {$inc: {petitionsCount: -1}});
 
   },
 
-  changePublishStatus: function (postId) {
+  changePublishStatus: function (petitionId) {
 
     var user = Meteor.user();
 
     if (!Roles.userIsInRole(user, ['admin']))
       throw new Meteor.Error(403, "You are not authorized to change publishing status.");
 
-    var post = Posts.findOne(postId);
-    Posts.update(postId, {$set: {published: !post.published}});
+    var petition = Petitions.findOne(petitionId);
+    Petitions.update(petitionId, {$set: {published: !petition.published}});
 
   }
 });

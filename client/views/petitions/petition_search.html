@@ -1,4 +1,4 @@
-<template name="postSearch">
+<template name="petitionSearch">
   <div class="modal fade"
        id="modal-search"
        tabindex="-1"
@@ -20,10 +20,10 @@
             <p class="footer-subtitle text-center">
               Search Petitions by name, description, or author
             </p>
-            
+
             <div class="input-group input-search">
               <span class="input-group-addon input-clear glyphicon glyphicon-search search-icon"></span>
-              {{> esInput id="search" index="posts" class="form-control input-lg input-clear" placeholder="Search (3 character minimum)" }}
+              {{> esInput id="search" index="petitions" class="form-control input-lg input-clear" placeholder="Search (3 character minimum)" }}
             </div>
 
             {{#if session 'waiting'}}
@@ -31,12 +31,12 @@
             {{/if}}
 
             {{#each session 'results'}}
-              {{> postCard post=this }}
+              {{> petitionCard petition=this }}
             {{/each}}
 
             {{#if noResults}}
               <p class="footer-subtitle text-center" style="margin: 50px 0;">
-                No Results. <a href="{{pathFor 'postSubmit'}}">Create a petition.</a>
+                No Results. <a href="{{pathFor 'petitionSubmit'}}">Create a petition.</a>
               </p>
             {{/if}}
           </div>

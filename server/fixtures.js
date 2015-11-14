@@ -1,4 +1,4 @@
-// Initialize Post Count singleton
+// Initialize Petition Count singleton
 
 if (Singleton.find().count() === 0) {
   Singleton.insert({
@@ -7,9 +7,9 @@ if (Singleton.find().count() === 0) {
   });
 }
 
-// Add test posts to non-production instances
+// Add test petitions to non-production instances
 
-if (Posts.find().count() === 0 && process.env.NODE_ENV != "production" ) {
+if (Petitions.find().count() === 0 && process.env.NODE_ENV != "production" ) {
 
   console.log("Adding test tags...");
 
@@ -18,7 +18,9 @@ if (Posts.find().count() === 0 && process.env.NODE_ENV != "production" ) {
   var tagId_dining = Tags.insert({name: "Dining"});
   var tagId_test = Tags.insert({name: "Test"});
 
-  console.log("Adding test posts...");
+  console.log("Adding test petitions...");
+
+
 
   var peteId = Meteor.users.insert({
     username: 'pam3961',
@@ -34,11 +36,12 @@ if (Posts.find().count() === 0 && process.env.NODE_ENV != "production" ) {
       response: true
     }
   });
-  var pete = Meteor.users.findOne(peteId);
-  
-  // Post with 7-day history
 
-  var postId_seven_day = Posts.insert({
+  var pete = Meteor.users.findOne(peteId);
+
+  // Petition with 7-day history
+
+  var petitionId_seven_day = Petitions.insert({
     userId: pete._id,
     author: pete.profile.displayName,
     submitted: moment().subtract(7, 'days').valueOf(),
@@ -49,59 +52,9 @@ if (Posts.find().count() === 0 && process.env.NODE_ENV != "production" ) {
     minimumVotes: Singleton.findOne().minimumThreshold,
     tag_ids: [tagId_housing]
   });
+  // Petition with 3-day history
 
-  Scores.insert({
-    postId: postId_seven_day,
-    created_at: moment().subtract(7, 'days').valueOf(),
-    score: 1,
-    votes: 1
-  });
-
-  Scores.insert({
-    postId: postId_seven_day,
-    created_at: moment().subtract(6, 'days').valueOf(),
-    score: 10,
-    votes: 10
-  });
-
-  Scores.insert({
-    postId: postId_seven_day,
-    created_at: moment().subtract(5, 'days').valueOf(),
-    score: 22,
-    votes: 22
-  });
-
-  Scores.insert({
-    postId: postId_seven_day,
-    created_at: moment().subtract(4, 'days').valueOf(),
-    score: 30,
-    votes: 30
-  });
-
-  Scores.insert({
-    postId: postId_seven_day,
-    created_at: moment().subtract(3, 'days').valueOf(),
-    score: 44,
-    votes: 44
-  });
-
-  Scores.insert({
-    postId: postId_seven_day,
-    created_at: moment().subtract(2, 'days').valueOf(),
-    score: 47,
-    votes: 47
-  });
-
-  Scores.insert({
-    postId: postId_seven_day,
-    created_at: moment().subtract(1, 'day').valueOf(),
-    score: 50,
-    votes: 50
-  });
-
-  // Post with 3-day history
-
-  var postId_three_day = Posts.insert({
+  var petitionId_three_day = Petitions.insert({
     userId: pete._id,
     author: pete.profile.displayName,
     submitted: moment().subtract(3, 'days').valueOf(),
@@ -113,30 +66,9 @@ if (Posts.find().count() === 0 && process.env.NODE_ENV != "production" ) {
     tag_ids: [tagId_technology]
   });
 
-  Scores.insert({
-    postId: postId_three_day,
-    created_at: moment().subtract(3, 'days').valueOf(),
-    score: 1,
-    votes: 1
-  });
+  // Petition with 0-day history
 
-  Scores.insert({
-    postId: postId_three_day,
-    created_at: moment().subtract(2, 'days').valueOf(),
-    score: 2,
-    votes: 2
-  });
-
-  Scores.insert({
-    postId: postId_three_day,
-    created_at: moment().subtract(1, 'day').valueOf(),
-    score: 4,
-    votes: 4
-  });
-
-  // Post with 0-day history
-
-  var postId_no_history = Posts.insert({
+  var petitionId_no_history = Petitions.insert({
     userId: pete._id,
     author: pete.profile.displayName,
     submitted: new Date().getTime(),
@@ -148,9 +80,9 @@ if (Posts.find().count() === 0 && process.env.NODE_ENV != "production" ) {
     tag_ids: [tagId_test, tagId_dining]
   });
 
-  // Expired post
+  // Expired petition
 
-  var postId_expired = Posts.insert({
+  var petitionId_expired = Petitions.insert({
     userId: pete._id,
     author: pete.profile.displayName,
     submitted: moment().subtract(2, 'months').valueOf(),
@@ -162,14 +94,14 @@ if (Posts.find().count() === 0 && process.env.NODE_ENV != "production" ) {
     tag_ids: [tagId_housing]
   });
 
-  // Extra posts for testing scalability and pagination
+  // Extra petitions for testing scalability and pagination
 
   for (var i = 0; i < 10; i++) {
-    Posts.insert({
+    Petitions.insert({
       userId: pete._id,
       author: pete.profile.displayName,
       submitted: new Date().getTime(),
-      title: 'Test post #' + i,
+      title: 'Test petition #' + i,
       description: "Foo",
       upvoters: [pete._id],
       votes: 1,
@@ -201,6 +133,6 @@ if (Meteor.users.find({username: "sgweb"}).count() === 0) {
   Roles.addUsersToRoles(sgweb, ['admin']);
 }
 
-// Update post count
+// Update petition count
 
-Singleton.update({}, {$set: {postsCount: Posts.find().count()}});
+Singleton.update({}, {$set: {petitionsCount: Petitions.find().count()}});

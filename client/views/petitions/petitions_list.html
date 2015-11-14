@@ -1,42 +1,42 @@
-<template name="postsList">
+<template name="petitionsList">
   <div class="application-content container-fluid">
-    {{> petitionGroup posts=posts
-                      postOrder=postOrder
+    {{> petitionGroup petitions=petitions
+                      petitionOrder=petitionOrder
                       title="Open/Expired Petitions"
                       tags=tags
-                      noposts="Be the first to petition your government." }}
+                      nopetitions="Be the first to petition your government." }}
   </div>
 </template>
 
-<template name="postsTagList">
+<template name="petitionsTagList">
   <div class="application-content container-fluid">
-    {{> petitionGroup posts=posts
-                      postOrder=postOrder
+    {{> petitionGroup petitions=petitions
+                      petitionOrder=petitionOrder
                       tag=this.tag
                       tags=tags
-                      noposts="There are no petitions with that tag." }}
+                      nopetitions="There are no petitions with that tag." }}
   </div>
 </template>
 
-<template name="postsInProgressList">
+<template name="petitionsInProgressList">
   <div class="application-content container-fluid">
-    {{> petitionGroup posts=posts
-                      postOrder=postOrder
+    {{> petitionGroup petitions=petitions
+                      petitionOrder=petitionOrder
                       title="In Progress"
                       description="These petitions are currently being worked on by Student Government. Status updates may be available on the petition page."
                       tags=tags
-                      noposts="No petitions are currently in progress." }}
+                      nopetitions="No petitions are currently in progress." }}
   </div>
 </template>
 
-<template name="postsWithResponsesList">
+<template name="petitionsWithResponsesList">
   <div class="application-content container-fluid">
-    {{> petitionGroup posts=posts
-                      postOrder=postOrder
+    {{> petitionGroup petitions=petitions
+                      petitionOrder=petitionOrder
                       title="Responses"
                       description="These petitions have recieved official responses."
                       tags=tags
-                      noposts="No petitions have received responses." }}
+                      nopetitions="No petitions have received responses." }}
   </div>
 </template>
 
@@ -49,8 +49,8 @@
         <div class="col-md-12">
           <span class="pull-left">Sort By</span>
           <select id="petition-order" class="form-control input-lg">
-            <option {{selected postOrder "submitted"}} value="submitted">Most Recent</option>
-            <option {{selected postOrder "votes"}} value="votes">Most Signatures</option>
+            <option {{selected petitionOrder "submitted"}} value="submitted">Most Recent</option>
+            <option {{selected petitionOrder "votes"}} value="votes">Most Signatures</option>
           </select>
 
           <div class="tag-box hidden-xs hidden-sm" id="tag-select">
@@ -77,13 +77,13 @@
             {{/if}}
           </h2>
         </div>
-        {{#each posts}}
-          {{> postCard post=this }}
+        {{#each petitions}}
+          {{> petitionCard petition=this }}
         {{/each}}
-        {{#if empty posts}}
+        {{#if empty petitions}}
           <div class="panel">
             <p class="footer-subtitle text-center" style="margin: 50px 0;">
-              <p>{{ noposts }}</p>{{#unless pending}}<a href="{{pathFor 'postSubmit'}}">Create a petition.</a>{{/unless}}
+              <p>{{ nopetitions }}</p>{{#unless pending}}<a href="{{pathFor 'petitionSubmit'}}">Create a petition.</a>{{/unless}}
             </p>
           </div>
         {{/if}}

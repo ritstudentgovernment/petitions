@@ -1,59 +1,59 @@
-Template.postSubmit.helpers({
-  'emptyPost': function() {
+Template.petitionSubmit.helpers({
+  'emptyPetition': function() {
 
     return {
       votes: 1,
       author: Meteor.user().profile.name,
-      title: Session.get('post.title'),
-      tag_ids: Session.get('post.tag_ids')
+      title: Session.get('petition.title'),
+      tag_ids: Session.get('petition.tag_ids')
     }
   },
   'title': function() {
-    return Session.get('post.title');
+    return Session.get('petition.title');
   },
   'author': function() {
     return Meteor.user().profile.displayName;
   }
 });
 
-Template.postSubmit.events({
+Template.petitionSubmit.events({
   'submit form': function(e) {
     e.preventDefault();
 
-    var post = {
-      title: Session.get('post.title'),
-      description: Session.get('post.description'),
-      tag_ids: Session.get('post.tag_ids')
+    var petition = {
+      title: Session.get('petition.title'),
+      description: Session.get('petition.description'),
+      tag_ids: Session.get('petition.tag_ids')
     }
 
-    Meteor.call('post', post, function(error, id) {
+    Meteor.call('petition', petition, function(error, id) {
       if (error) {
         // display the error to the user
         throwError(error.reason);
         if (error.error === 302)
-          Router.go('postPage', {_id: error.details})
+          Router.go('petitionPage', {_id: error.details})
       } else {
-        Session.set('post.title', '');
-        Session.set('post.description', '');
+        Session.set('petition.title', '');
+        Session.set('petition.description', '');
         if(Singleton.findOne().moderation){
           Router.go('index');
           throwError("Petition is pending approval, you will recieve an email once it has gone thorugh the approval process.");
         }else{
-          Router.go('postPage', {_id: id});
+          Router.go('petitionPage', {_id: id});
         }
       }
     });
   },
   'keyup *[name=title]': function (e) {
-    Session.set('post.title', $('*[name=title]').val());
+    Session.set('petition.title', $('*[name=title]').val());
   },
   'keyup *[name=description]': function (e) {
-    Session.set('post.description', $('textarea[name=description]').val());
+    Session.set('petition.description', $('textarea[name=description]').val());
   }
 });
 
-Template.postSubmit.rendered = function () {
-  Session.set('post.tag_ids', []);
+Template.petitionSubmit.rendered = function () {
+  Session.set('petition.tag_ids', []);
   Deps.autorun(function () {
     $('#tags').select2({
       placeholder: "Petition Tags",
@@ -70,13 +70,13 @@ Template.postSubmit.rendered = function () {
     $('.select2-search-field>input').addClass("input");
   });
   $('#tags').on("change", function (e) {
-    var tag_ids = Session.get('post.tag_ids')
+    var tag_ids = Session.get('petition.tag_ids')
     if (e.added) {
       tag_ids.push(e.added._id);
-      Session.set('post.tag_ids', tag_ids);
+      Session.set('petition.tag_ids', tag_ids);
     } else if (e.removed) {
       var tag_ids = _.without(tag_ids, e.removed._id);
-      Session.set('post.tag_ids', tag_ids);
+      Session.set('petition.tag_ids', tag_ids);
     } else {
       // to-do
     }

@@ -22,7 +22,7 @@ Meteor.startup(function () {
           sn: null,
           name: null
         }}});
-      }  
+      }
     });
     Migrations.insert({name: "ensureProfilePropertyExistsForUsers"});
   }
@@ -35,7 +35,7 @@ Meteor.startup(function () {
 
   // mark all existing petitions as published by default
   if (!Migrations.findOne({name: "markAllPreviousPetitionsAsPublished"})) {
-    Posts.update({}, {$set: {published: true}}, {multi: true});
+    Petitions.update({}, {$set: {published: true}}, {multi: true});
     Migrations.insert({name: "markAllPreviousPetitionsAsPublished"});
   }
 

@@ -1,4 +1,4 @@
-<template name="postEdit">
+<template name="petitionEdit">
   <div class="application-content">
     <div class="container-fluid">
       <div class="row-fluid">
@@ -7,9 +7,9 @@
             <h2>
               <strong>Edit Petition</strong>
               <a class="btn btn-secondary pull-right"
-                 href="{{pathFor 'postPage' _id=post._id}}">Back to Petition</a>
+                 href="{{pathFor 'petitionPage' _id=petition._id}}">Back to Petition</a>
             </h2>
-              <p class="lead">Petition "{{post.title}}" currently has {{pluralize post.votes "signature"}}.</p>
+              <p class="lead">Petition "{{petition.title}}" currently has {{pluralize petition.votes "signature"}}.</p>
 
               <!-- Nav tabs -->
               <p>
@@ -52,7 +52,7 @@
          maxlength="70"
          placeholder="My Petition's Name"
          type="text"
-         value="{{ post.title }}">
+         value="{{ petition.title }}">
 
   <label class="control-label" for="description">Tags</label>
   <input id="tags" style="width: 100%; margin-bottom: 10px;">
@@ -64,28 +64,28 @@
             placeholder="My Petition's Description"
             type="text"
             rows="15"
-            value="{{ post.description }}"></textarea>
+            value="{{ petition.description }}"></textarea>
 </template>
 
 <template name="petitionUpdates">
   <div class="panel panel-default panel-body">
     <label class="control-label" for="updates">Status Updates</label>
     <p>Use status updates for information regarding in-progress activities, e.g., committees formed as a result of the petition, or reachout efforts to Administrators.</p>
-    <p>If a new status update is created, an e-mail will be dispatched to petition signers who subscribe to status updates.</p>
+    <p>If a new status update is created, an e-mail will be dispatched to petition signatories who subscribe to status updates.</p>
   </div>
 
   {{#each updates}}
-      {{> createUpdate update=this post=../post }}
+      {{> createUpdate update=this petition=../petition }}
   {{/each}}
 
-  {{> createUpdate update=newUpdate post=post user=user }}
+  {{> createUpdate update=newUpdate petition=petition user=user }}
 </template>
 
 <template name="petitionResponse">
   <div class="panel panel-default panel-body">
     <label class="control-label" for="response">Response</label>
     <p>Use response for the <u>final</u> petition update, e.g., the final decision reached by Administration, the consensus reached by the committee formed for the petition, etc.</p>
-    <p>When a response is initially posted, an e-mail is dispatched to petition signers who subscribe to updates.</p>
+    <p>When a response is initially petitioned, an e-mail is dispatched to petition signatories who subscribe to updates.</p>
   </div>
   <textarea name="response"
             class="form-group form-control input-lg"
@@ -93,12 +93,12 @@
             placeholder="Petition Response"
             type="text"
             rows="15"
-            value="{{ post.response }}"></textarea>
+            value="{{ petition.response }}"></textarea>
 
 </template>
 
 <template name="petitionPublish">
-  {{#with post}}
+  {{#with petition}}
     <div class="panel panel-default panel-body">
       <label class="control-label" for="publish">Publish Status</label>
       <p>This petition is currently <strong>{{publishStatus}}</strong>. Published petitions are publicly viewable and accessible via the API; unpublished petitions are only visible to administrators and not accessible via the API.</p>

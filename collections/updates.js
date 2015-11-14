@@ -11,7 +11,7 @@
 
 Updates = new Meteor.Collection('updates');
 
-var validateUpdate = function (updateAttrs, post) {
+var validateUpdate = function (updateAttrs, petition) {
 
   if (!updateAttrs.title || updateAttrs.title.length > 80)
     throw new Meteor.Error(422, "Title is longer than 80 characters or not present.");
@@ -19,10 +19,10 @@ var validateUpdate = function (updateAttrs, post) {
   if (!updateAttrs.description || updateAttrs.description.length > 4000)
     throw new Meteor.Error(422, "Description is longer than 4000 characters or not present.");
 
-  if (!updateAttrs.postId)
-    throw new Meteor.Error(422, "The title's postId is missing.");
+  if (!updateAttrs.petitionId)
+    throw new Meteor.Error(422, "The title's petitionId is missing.");
 
-  if (post.status == "responded")
+  if (petition.status == "responded")
     throw new Meteor.Error(422, "Updates can't be added to petitions with responses.");
 
 };
@@ -35,17 +35,17 @@ Meteor.methods({
     if (!Roles.userIsInRole(user, ['admin', 'moderator']))
       throw new Meteor.Error(403, "You are not authorized to create updates.");
 
-    var post = Posts.findOne(updateAttrs.postId);
-    validateUpdate(updateAttrs, post);
+    var petition = Petitions.findOne(updateAttrs.petitionId);
+    validateUpdate(updateAttrs, petition);
 
-    var existingUpdates = Updates.find({postId: updateAttrs.postId});
+    var existingUpdates = Updates.find({petitionId: updateAttrs.petitionId});
 
-    if (_.isEmpty(post.response)) {
+    if (_.isEmpty(petition.response)) {
 
-      Posts.update(updateAttrs.postId, {$set: {status: "waiting-for-reply"}});
+      Petitions.update(updateAttrs.petitionId, {$set: {status: "waiting-for-reply"}});
 
       var users = Meteor.users.find({$and: [{'notify.updates': true},
-                                           {_id: {$in: post.upvoters}}]},
+                                           {_id: {$in: petition.upvoters}}]},
                                     {fields: {username: 1}});
       
       var emails = users.map(function (user) { return user.username + "@rit.edu"; });
@@ -56,14 +56,14 @@ Meteor.methods({
         from: "sgnoreply@rit.edu",
         subject: "PawPrints - A petition you signed has a status update",
         text: "Hello, \n\n" +
-              "Petition \"" + post.title + "\" by " + post.author + " has a status update: \n\n" +
-              Meteor.settings.public.root_url + "/petitions/" + post._id +
+              "Petition \"" + petition.title + "\" by " + petition.author + " has a status update: \n\n" +
+              Meteor.settings.public.root_url + "/petitions/" + petition._id +
               "\n\nThanks, \nRIT Student Government"
       });
 
     }
 
-    var update = _.extend(_.pick(updateAttrs, 'title', 'description', 'postId'), {
+    var update = _.extend(_.pick(updateAttrs, 'title', 'description', 'petitionId'), {
       created_at: new Date().getTime(),
       updated_at: new Date().getTime(),
       author: user.profile.name,
@@ -80,10 +80,10 @@ Meteor.methods({
     if (!Roles.userIsInRole(user, ['admin', 'moderator']))
       throw new Meteor.Error(403, "You are not authorized to edit updates.");
 
-    var post = Posts.findOne(updateAttrs.postId);
-    validateUpdate(updateAttrs, post);
+    var petition = Petitions.findOne(updateAttrs.petitionId);
+    validateUpdate(updateAttrs, petition);
 
-    var update = _.extend(_.pick(updateAttrs, 'title', 'description', 'postId'), {
+    var update = _.extend(_.pick(updateAttrs, 'title', 'description', 'petitionId'), {
       updated_at: new Date().getTime(),
       author: user.profile.name,
       userId: user._id

@@ -2,7 +2,7 @@
   <div class="page container">
     <form class="main">
       <div style="padding-top: 26px; padding-bottom:26px;">
-          <input index="posts" class="form-control input-lg" id="search" placeholder="Search Petitions by name, description, or author" style="height: 49px; width:100%;">
+          <input index="petitions" class="form-control input-lg" id="search" placeholder="Search Petitions by name, description, or author" style="height: 49px; width:100%;">
       </div>
       <div class="row">
             {{#if session 'waiting'}}
@@ -10,12 +10,12 @@
             {{/if}}
 
             {{#each session 'results'}}
-              {{> postCard post=this title="In Progress"}}
+              {{> petitionCard petition=this title="In Progress"}}
             {{/each}}
 
             {{#if noResults}}
               <p class="footer-subtitle text-center" style="margin: 50px 0;">
-                No Results. <a href="{{pathFor 'postSubmit'}}">Create a petition.</a>
+                No Results. <a href="{{pathFor 'petitionSubmit'}}">Create a petition.</a>
               </p>
             {{/if}}
         </div>

@@ -2,11 +2,11 @@
   <div class="container">
     {{> moderationButton}}
     <div class="application-content container-fluid">
-      {{> petitionGroup posts=posts
-                        postOrder=postOrder
+      {{> petitionGroup petitions=petitions
+                        petitionOrder=petitionOrder
                         title="Pending Approval"
                         description="These petitions are currently being evaluated for submission"
-                        noposts="No petitions are currently pending."
+                        nopetitions="No petitions are currently pending."
                         pending=true
                       }}
     </div>

@@ -1,4 +1,4 @@
-<template name="postSubmit">
+<template name="petitionSubmit">
   <div class="">
     <div class="container-fluid">
       <div class="row-fluid">
@@ -16,7 +16,7 @@
                      maxlength="70"
                      placeholder="My Petition's Name"
                      type="text"
-                     value="{{ session 'post.title' }}">
+                     value="{{ session 'petition.title' }}">
               <input id="tags" style="width: 100%; margin-bottom: 10px;">
               <textarea name="description"
                         class="form-group form-control input-lg"
@@ -24,11 +24,11 @@
                         placeholder="My Petition's Description"
                         type="text"
                         rows="15"
-                        value="{{ session 'post.description' }}"></textarea>
+                        value="{{ session 'petition.description' }}"></textarea>
             <h2><strong>Preview Petition Card</strong></h2>
           </div>
           <div class="petitions col-sm-10 col-sm-offset-1 col-md-9 col-md-offset-3">
-            {{> postCard post=emptyPost }}
+            {{> petitionCard petition=emptyPetition }}
           </div>
           <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
             <p><input type="submit"

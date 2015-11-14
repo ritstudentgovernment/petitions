@@ -1,15 +1,15 @@
-Template.postSign.events({
+Template.petitionSign.events({
   'submit form': function(e) {
     e.preventDefault();
-    var post = this.post;
+    var petition = this.petition;
     var sign = function () {
-      Meteor.call('sign', post._id, function(error) {
+      Meteor.call('sign', petition._id, function(error) {
       if (error)
         throwError(error.reason);
       else {
-        var signaturesNeeded = post.minimumVotes - post.votes;
+        var signaturesNeeded = petition.minimumVotes - petition.votes;
         if (signaturesNeeded >= 1) {
-          $('#postShareModal').modal('show');
+          $('#petitionShareModal').modal('show');
         }
       }
       });
@@ -27,11 +27,11 @@ Template.postSign.events({
   }
 });
 
-Template.postSign.helpers({
+Template.petitionSign.helpers({
   signedClass: function() {
     var userId = Meteor.userId();
-    if (userId && this.post && _.include(this.post.upvoters, userId) ||
-        moment(this.post.submitted).isBefore(moment().subtract(1, 'month'))) {
+    if (userId && this.petition && _.include(this.petition.upvoters, userId) ||
+        moment(this.petition.submitted).isBefore(moment().subtract(1, 'month'))) {
       return 'disabled';
     } else {
       return '';
@@ -39,9 +39,9 @@ Template.postSign.helpers({
   },
   btnText: function() {
     var userId = Meteor.userId();
-    if (userId && this.post && _.include(this.post.upvoters, userId)) {
+    if (userId && this.petition && _.include(this.petition.upvoters, userId)) {
       return 'Signed';
-    } else if (moment(this.post.submitted).isBefore(moment().subtract(1, 'month'))) {
+    } else if (moment(this.petition.submitted).isBefore(moment().subtract(1, 'month'))) {
       return 'Expired';
     } else {
       return 'Sign';

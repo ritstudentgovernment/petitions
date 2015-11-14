@@ -1,21 +1,21 @@
-<template name="postPage">
+<template name="petitionPage">
   <div class="container-fluid" style="background: white;">
     <div class="row-fluid row-eq-height">
       <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
         <div class="module module-sm">
           <p class="petition-title-wrapper">
-            <p><a class="title long-string-fix" href="{{pathFor 'postPage' _id=post._id}}">{{post.title}}</a></p>
+            <p><a class="title long-string-fix" href="{{pathFor 'petitionPage' _id=petition._id}}">{{petition.title}}</a></p>
             <p>
-              {{#each post.tag_ids}}
+              {{#each petition.tag_ids}}
                 {{#with tag this}}
                   <span class="label label-primary">{{upcase this.name}}</span>
                 {{/with}}
               {{/each}}
               {{#if isInRole 'admin' 'moderator'}}
-                <a href="{{pathFor 'postEdit' _id=post._id}}"><span class="label label-primary">EDIT</span></a>
+                <a href="{{pathFor 'petitionEdit' _id=petition._id}}"><span class="label label-primary">EDIT</span></a>
               {{/if}}
             </p>
-            <div class="footer-subtitle">POSTED {{ submitted_at }} BY {{post.author}}</div>
+            <div class="footer-subtitle">POSTED {{ submitted_at }} BY {{petition.author}}</div>
           </p>
           <p class="petition-social-wrapper">
             <a href="#"><img class="social-icon" social="facebook" src="../facebook.svg"></a>
@@ -28,14 +28,14 @@
       </div>
     </div>
   </div>
-  <div class="container-fluid application-content post-title-graph {{ goalReachedClass }}">
+  <div class="container-fluid application-content petition-title-graph {{ goalReachedClass }}">
 
-    {{#if post.response}}
+    {{#if petition.response}}
       <div class="row-fluid module-row">
         <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
           <div class="module module-white">
             <div class="petition-subtitle">OFFICIAL RESPONSE - LAST UPDATED {{ responded_at }}</div>
-              <p><h4 class="long-string-fix">{{{breaklines post.response }}}</h4></p>
+              <p><h4 class="long-string-fix">{{{breaklines petition.response }}}</h4></p>
             </div>
         </div>
       </div>
@@ -60,7 +60,7 @@
           <div class="petition-subtitle">
             <p>DESCRIPTION</p>
           </div>
-          <p class="long-string-fix">{{{breaklines post.description}}}</p>
+          <p class="long-string-fix">{{{breaklines petition.description}}}</p>
         </div>
 
         <div class="module module-white petition-signature-module">
@@ -73,18 +73,18 @@
       </div>
       <div class="col-xs-12 col-sm-3 col-md-2">
         <div class="module module-white">
-          {{#if post.pending}}
-            <button id="approve" value="approve" class="btn btn-md btn-primary">Approve Post</button>
-            <a href="#postRejectModal"
+          {{#if petition.pending}}
+            <button id="approve" value="approve" class="btn btn-md btn-primary">Approve Petition</button>
+            <a href="#petitionRejectModal"
                   class="btn btn-md btn-secondary"
                   data-toggle="modal">
                   Reject petition</a>
           {{else}}
           <div class="petition-subtitle">TAKE ACTION</div>
-          <div><p>{{> postSign }}</p></div>
+          <div><p>{{> petitionSign }}</p></div>
 
           <div class="petition-subtitle">
-               SIGNATURES ({{post.votes}} / {{post.minimumVotes}})
+               SIGNATURES ({{petition.votes}} / {{petition.minimumVotes}})
           </div>
           <div class="progress" style="margin-bottom: 10px;">
             <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%;">
@@ -105,7 +105,7 @@
           </p>
 
 
-          {{#if equal this.post.status undefined}}
+          {{#if equal this.petition.status undefined}}
             <div class="petition-subtitle petition-expires"
                   data-toggle="tooltip"
                   data-placement="bottom"
@@ -116,7 +116,7 @@
             <p><h4 class="count">{{mustReachDate}}</h4></p>
           {{/if}}
 
-          <a href="#postReportModal"
+          <a href="#petitionReportModal"
                 class="dropdown-toggle petition-report"
                 data-toggle="modal">
                 Report petition</a>
@@ -126,7 +126,7 @@
 
     </div>
   </div>
-  {{> postReport}}
-  {{> postReject}}
-  {{> postShareModal}}
+  {{> petitionReport}}
+  {{> petitionReject}}
+  {{> petitionShareModal}}
 </template>

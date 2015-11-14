@@ -33,7 +33,7 @@ Template.api.helpers({
        votes: 4,
        _id: "bDA8ynBMErm9NLaqj",
        minimumVotes: 25,
-       signers:[  
+       signatories:[  
           "PAM",
           "ALC",
           "TSP",
