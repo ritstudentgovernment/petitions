@@ -1,6 +1,6 @@
 <template name="carousel">
   <div class="container-fluid carousel">
-    <div class="carousel-content col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+    <div class="col-xs-12 col-sm-6 col-sm-offset-3" style="top:25%;margin-top:15px;">
       <h2 class="carousel-title text-center">
         MAKE YOUR MARK.
       </h2>
@@ -8,15 +8,14 @@
         <div class="carousel-description text-center">
           <h3><p>Create and vote on petitions.</p>
               <p>Receive official responses from Student Government.</p></h3>
+              <a href="{{pathFor 'search'}}" class="btn btn-lg btn-primary">
+                Search Petitions
+                <span class="glyphicon glyphicon-search carousel-search-icon"></span>
+              </a>
         </div>
       </div>
-      <div class="col-lg-10 col-lg-offset-1">
-        <div class="text-center">
-          <a href="{{pathFor 'search'}}" class="btn btn-lg btn-primary">
-            Search Petitions
-            <span class="glyphicon glyphicon-search carousel-search-icon"></span>
-          </a>
-        </div>
+      <div class="text-center">
+
       </div>
     </div>
   </div>

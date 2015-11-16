@@ -19,14 +19,14 @@
         <ul class="nav navbar-nav navbar-left">
           <li class="{{ isActiveRoute 'petitionsInProgress' }}">
             <a href="{{pathFor 'petitionsInProgress'}}">
-              <span class="glyphicon glyphicon-wrench"></span>
-              In Progress
+              <span class="glyphicon glyphicon-eye-open"></span>
+              Recognized
             </a>
           </li>
           <li class="{{ isActiveRoute 'petitionsResponses' }}">
             <a href="{{pathFor 'petitionsResponses'}}">
-              <span class="glyphicon glyphicon-comment"></span>
-              Responses
+              <span class="glyphicon glyphicon-ok"></span>
+              Responded
             </a>
           </li>
           <li class="{{ isActiveRoute 'about' }} {{ isActiveRoute 'petitionProcess' }} {{ isActiveRoute 'moderation' }} {{ isActiveRoute 'api' }}">
@@ -37,7 +37,7 @@
           </li>
           <li class="{{ isActiveRoute 'petitionSubmit' }}">
             <a href="{{pathFor 'petitionSubmit'}}">
-              <span class="glyphicon glyphicon-plus"></span>
+              <span class="glyphicon glyphicon-pencil"></span>
               Create
             </a>
           </li>

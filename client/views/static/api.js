@@ -25,7 +25,7 @@ Template.api.helpers({
     return JSON.stringify(response, undefined, 2);
   },
   example_individual: function makeExamplePetition () {
-    var response = {  
+    var response = {
        author: "Pete Mikitsh",
        submitted: 1410112945911,
        title: "Extend hours for RIT Computer Labs at peak times.",
@@ -33,24 +33,24 @@ Template.api.helpers({
        votes: 4,
        _id: "bDA8ynBMErm9NLaqj",
        minimumVotes: 25,
-       signatories:[  
+       signatories:[
           "PAM",
           "ALC",
           "TSP",
           "NXC"
        ],
-       history:[  
-          {  
+       history:[
+          {
              created_at: 1410112945912,
              votes: 1,
              _id: "ibdMPcGaS5gGmBEha"
           },
-          {  
+          {
              created_at: 1410199345913,
              votes: 2,
              _id: "5bw2TeyDK48XcqSiw"
           },
-          {  
+          {
              created_at: 1410285745914,
              votes: 4,
              _id: "jZu2D26gwRcZExFy2"

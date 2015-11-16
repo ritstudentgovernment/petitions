@@ -39,9 +39,7 @@
   text-align: left;
   vertical-align: top;
   width: 100%;
-  @media (min-width: @screen-sm-min) {
-    margin-top: 25px;
-  }
+  margin-top: 25px;
 }
 
 .module-row {
@@ -72,7 +70,6 @@
 
 .petition-signature-module {
   @media (max-width: @screen-xs-max) {
-    display: none;
   }
 }
 
@@ -108,7 +105,7 @@
 }
 
 .petition-social-wrapper {
-  margin-bottom: 50px;
+  margin-bottom: 0px;
 }
 
 .petition-subtitle {
@@ -166,25 +163,9 @@
   fill: #fff;
 }
 
-@keyframes popin {
-    from { opacity: 0; transform: scale(0.5);}
-    to   { opacity: 1; transform: scale(1);}
-}
-@-webkit-keyframes popin {
-    from { opacity: 0; -webkit-transform: scale(0.5);}
-    to   { opacity: 1; -webkit-transform: scale(1);}
-}
-@-moz-keyframes popin {
-    from { opacity: 0; -moz-transform: scale(0.5);}
-    to   { opacity: 1; -moz-transform: scale(1);}
-}
-
 .square {
   padding-bottom: 15px;
   padding-top: 15px;
-  animation: popin 0.5s;
-  -webkit-animation: popin 0.5s;
-  -moz-animation: popin 0.5s;
 }
 
 .square-content {

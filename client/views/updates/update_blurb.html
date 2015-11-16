@@ -1,7 +1,17 @@
 <template name="updateBlurb">
-  <h4 class="update-title">
-    <p>{{this.title}}</p>
-  </h4>
-  <h6 class="petition-subtitle update-subtitle"><p>{{fromNow this.created_at}} BY {{upcase this.author}}</p></h6>
+  <div class="row">
+    <div class="col-md-9">
+
+    </div>
+    <div class="col-md-3 text-right">
+
+    </div>
+    <div class="col-md-12 petition-subtitle text-center">
+
+    </div>
+  </div>
+  <h3 class="update-title text-center">{{this.title}}</h3>
+  <p class="petition-subtitle text-center">Update by {{this.author}} - {{fromNow this.created_at}} </p>
+  <hr />
   <p>{{{breaklines this.description }}}</p>
 </template>

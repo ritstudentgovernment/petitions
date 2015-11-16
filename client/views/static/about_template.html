@@ -1,10 +1,11 @@
 <template name="aboutTemplate">
-  <div class="container-fluid">
+    {{> headerCarousel title=title description=""}}
+  <div class="container-fluid" style="margin-top:15px;">
     <div class="row-fluid">
       <div class="col-sm-10 col-sm-offset-1">
-        <div class="col-sm-3 about-side-panel">
+        <div class="col-sm-3">
           <div class="list-group">
-            <a class="list-group-item {{ isActiveRoute 'about' }}" 
+            <a class="list-group-item {{ isActiveRoute 'about' }}"
                href="{{ pathFor 'about' }}">About</a>
             <a class="list-group-item  {{ isActiveRoute 'petitionProcess' }}"
                href="{{ pathFor 'petitionProcess' }}">Petition Process</a>

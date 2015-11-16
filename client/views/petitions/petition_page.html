@@ -1,11 +1,8 @@
 <template name="petitionPage">
-  <div class="container-fluid" style="background: white;">
-    <div class="row-fluid row-eq-height">
-      <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
-        <div class="module module-sm">
-          <p class="petition-title-wrapper">
-            <p><a class="title long-string-fix" href="{{pathFor 'petitionPage' _id=petition._id}}">{{petition.title}}</a></p>
-            <p>
+  <div class="container" style="background: white;width:100%!important;">
+    <div class="container">
+            <h1 style="color:#f36e21;" class="long-string-fix text-center"><strong>{{petition.title}}</strong></h1>
+            <p class="text-center">
               {{#each petition.tag_ids}}
                 {{#with tag this}}
                   <span class="label label-primary">{{upcase this.name}}</span>
@@ -15,115 +12,73 @@
                 <a href="{{pathFor 'petitionEdit' _id=petition._id}}"><span class="label label-primary">EDIT</span></a>
               {{/if}}
             </p>
-            <div class="footer-subtitle">POSTED {{ submitted_at }} BY {{petition.author}}</div>
-          </p>
-          <p class="petition-social-wrapper">
-            <a href="#"><img class="social-icon" social="facebook" src="../facebook.svg"></a>
-            <a href="#"><img class="social-icon" social="twitter" src="../twitter.svg"></a>
-            <a href="#"><img class="social-icon" social="reddit" src="../reddit.svg"></a>
-            <a href="#"><img class="social-icon" social="plus" src="../plus.svg"></a>
-            <a href="#"><img class="social-icon" social="linkedin" src="../linkedin.svg"></a>
-          </p>
-        </div>
-      </div>
+            <div class="text-center" style="margin-bottom:15px;">
+              <p>Petition by {{petition.author}}</p>
+              {{#if updates}}
+                {{#each updates}}
+                  <p>Update by {{this.author}}</p>
+                {{/each}}
+              {{/if}}
+            </div>
     </div>
   </div>
-  <div class="container-fluid application-content petition-title-graph {{ goalReachedClass }}">
-
-    {{#if petition.response}}
-      <div class="row-fluid module-row">
-        <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
-          <div class="module module-white">
-            <div class="petition-subtitle">OFFICIAL RESPONSE - LAST UPDATED {{ responded_at }}</div>
-              <p><h4 class="long-string-fix">{{{breaklines petition.response }}}</h4></p>
+  <div class="container application-content">
+    <div class="row" style="margin-bottom:15px;">
+      <div id="fullContent" class="col-md-12">
+        {{#if petition.response}}
+          <div class="row module-row">
+            <div class="col-md-12">
+              <div class="module module-white">
+                <h2 class="text-center"><strong>Official Response</strong></h2>
+                  <div class="petition-subtitle text-center">{{ responded_at }}</div>
+                  <hr />
+                  <p class="long-string-fix">{{{breaklines petition.response }}}</p>
+              </div>
             </div>
-        </div>
+          </div>
+        {{/if}}
       </div>
-    {{/if}}
-
-    {{#if updates}}
-      <div class="row-fluid module-row">
-        <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
-          <div class="module module-white">
-            <div class="petition-subtitle">STATUS UPDATES</div>
-              {{#each updates}}
-                {{> updateBlurb}}
-              {{/each}}
+      <div id="leftContent" class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+        <!-- Petition Updates -->
+        {{#if updates}}
+          {{#each updates}}
+            <div class="module module-white">
+              {{> updateBlurb}}
             </div>
-        </div>
-      </div>
-    {{/if}}
-
-    <div class="row-fluid module-row">
-      <div class="col-xs-12 col-sm-9 col-md-8 col-md-offset-1 col-lg-6 col-lg-offset-2">
+          {{/each}}
+        {{/if}}
+        <!-- Petition Body -->
         <div class="module module-white">
           <div class="petition-subtitle">
-            <p>DESCRIPTION</p>
+            <strong>Description</strong>
+            <span class="pull-right">{{ submitted_at }}</span>
           </div>
+          <hr />
           <p class="long-string-fix">{{{breaklines petition.description}}}</p>
         </div>
-
-        <div class="module module-white petition-signature-module">
-          <div class="petition-subtitle">SIGNED BY</div>
-          <p><h6 class="petition-initials">{{#each initials}}
-            {{ this }}<br>
-          {{/each}}</h6></p>
+        <!-- action bar on mobile -->
+        <div class="visible-xs hidden-sm hidden-md hidden-lg">
+          {{> actionBar}}
         </div>
-
-      </div>
-      <div class="col-xs-12 col-sm-3 col-md-2">
+        <!-- Petition Signatures -->
         <div class="module module-white">
-          {{#if petition.pending}}
-            <button id="approve" value="approve" class="btn btn-md btn-primary">Approve Petition</button>
-            <a href="#petitionRejectModal"
-                  class="btn btn-md btn-secondary"
-                  data-toggle="modal">
-                  Reject petition</a>
-          {{else}}
-          <div class="petition-subtitle">TAKE ACTION</div>
-          <div><p>{{> petitionSign }}</p></div>
-
-          <div class="petition-subtitle">
-               SIGNATURES ({{petition.votes}} / {{petition.minimumVotes}})
+          <div class="petition-subtitle">Signed by</div>
+          <hr />
+          <div style="overflow:scroll;">
+            <p>
+              <h6 class="petition-initials">
+                {{#each initials}}
+                  {{ this }}<br>
+                {{/each}}
+              </h6>
+            </p>
           </div>
-          <div class="progress" style="margin-bottom: 10px;">
-            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%;">
-              <span class="sr-only">{{progress}}%</span>
-            </div>
-          </div>
-
-          <div class="petition-subtitle petition-status"
-               data-toggle="tooltip"
-               data-placement="bottom">
-               STATUS
-               <div class="glyphicon glyphicon-question-sign"></div>
-          </div>
-          <p>
-            <h4 class="count">
-            {{ petitionStatus.title }}
-            </h4>
-          </p>
-
-
-          {{#if equal this.petition.status undefined}}
-            <div class="petition-subtitle petition-expires"
-                  data-toggle="tooltip"
-                  data-placement="bottom"
-                  title="Petitions have one month to reach the signature threshold.">
-                  EXPIRES
-                  <div class="glyphicon glyphicon-question-sign"></div>
-            </div>
-            <p><h4 class="count">{{mustReachDate}}</h4></p>
-          {{/if}}
-
-          <a href="#petitionReportModal"
-                class="dropdown-toggle petition-report"
-                data-toggle="modal">
-                Report petition</a>
-          {{/if}}
         </div>
       </div>
-
+      <!-- Action Bar -->
+      <div id="rightContent" class="hidden-xs col-sm-4 col-md-4 col-lg-4">
+        {{> actionBar}}
+      </div>
     </div>
   </div>
   {{> petitionReport}}

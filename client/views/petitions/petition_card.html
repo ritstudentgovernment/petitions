@@ -4,10 +4,17 @@
       <h4 class="petition-sign-count">{{pluralize petition.votes "Signature"}}</h4>
       <h3 class="petition-title">
         {{#if isExpired this}}
-          <a href="{{pathFor 'petitionPage' _id=petition._id }}"  style="color: #513127">
-            {{petition.title}}
-          </a>
+          {{#if isResponded petition}}
+            <a href="{{pathFor 'petitionPage' _id=petition._id }}">
+              {{petition.title}}
+            </a>
           {{else}}
+            <a href="{{pathFor 'petitionPage' _id=petition._id }}"  style="color: #513127">
+              {{petition.title}}
+            </a>
+          {{/if}}
+
+        {{else}}
           <a href="{{pathFor 'petitionPage' _id=petition._id }}">
             {{petition.title}}
           </a>
@@ -17,7 +24,11 @@
       {{#each petition.tag_ids}}
         {{#with tag this}}
             {{#if isExpired ../..}}
-              <a id="card" href="" name="{{this.name}}" class="label label-success card-tag">{{upcase this.name}}</a>
+              {{#if isResponded ../../..}}
+                <a id="card" href="" name="{{this.name}}" class="label label-primary card-tag">{{upcase this.name}}</a>
+              {{else}}
+                <a id="card" href="" name="{{this.name}}" class="label label-success card-tag">{{upcase this.name}}</a>
+              {{/if}}
             {{else}}
               <a id="card" href="" name="{{this.name}}" class="label label-primary card-tag">{{upcase this.name}}</a>
             {{/if}}

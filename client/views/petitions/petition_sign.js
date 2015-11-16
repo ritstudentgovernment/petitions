@@ -44,7 +44,7 @@ Template.petitionSign.helpers({
     } else if (moment(this.petition.submitted).isBefore(moment().subtract(1, 'month'))) {
       return 'Expired';
     } else {
-      return 'Sign';
+      return 'Add My Name';
     }
   }
 });

@@ -57,7 +57,7 @@ Handlebars.registerHelper('fromNow', function (time) {
   var timeTick = new Deps.Dependency();
   Meteor.setInterval(function () { timeTick.changed(); }, 1000);
   timeTick.depend();
-  return new moment(time).fromNow().toUpperCase();
+  return new moment(time).fromNow();
 });
 
 Handlebars.registerHelper('singleton', function () {
