@@ -9,7 +9,7 @@ if (Singleton.find().count() === 0) {
 
 // Add test petitions to non-production instances
 
-if (Petitions.find().count() === 0 && process.env.NODE_ENV != "production" ) {
+if (false){//Petitions.find().count() === 0 && process.env.NODE_ENV != "production" ) {
 
   console.log("Adding test tags...");
 
