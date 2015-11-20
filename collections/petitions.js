@@ -67,7 +67,8 @@ Meteor.methods({
       votes: 1,
       minimumVotes: Singleton.findOne().minimumThreshold,
       published: publishByDefault,
-      pending: Singleton.findOne().moderation
+      pending: Singleton.findOne().moderation,
+      lastSignedAt: new Date().getTime()
     });
 
     var petitionId = Petitions.insert(petition);
@@ -96,7 +97,8 @@ Meteor.methods({
       upvoters: {$ne: user._id}
     }, {
       $addToSet: {upvoters: user._id},
-      $inc: {votes: 1}
+      $inc: {votes: 1},
+      $set: {lastSignedAt: new Date().getTime()}
     });
 
     if (petition.votes === petition.minimumVotes && Meteor.isServer) {

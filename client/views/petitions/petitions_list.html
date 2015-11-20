@@ -55,7 +55,11 @@
           <div class="col-md-12">
             <h4 class="text-center"><strong>Sort</strong></h4>
             <select id="petition-order" class="form-control input-lg">
-              <option {{selected petitionOrder "submitted"}} value="submitted">Most Recent</option>
+              {{#if equal title "Responded"}}
+              <option {{selected petitionOrder "responded_at"}} value="responded_at">Most Recent Responded</option>
+              {{/if}}
+              <option {{selected petitionOrder "submitted"}} value="submitted">Most Recent Submitted</option>
+              <option {{selected petitionOrder "lastSignedAt"}} value="lastSignedAt">Last Signed</option>
               <option {{selected petitionOrder "votes"}} value="votes">Most Signatures</option>
             </select>
             <h4 class="text-center hidden-xs hidden-sm"><strong>Filter</strong></h4>

@@ -20,7 +20,7 @@ Template.petitionPage.helpers({
       }
     }).fetch().map(function (user) {
       if (!user.profile.initials) {
-        return "Witheld";
+        return "Unknown";
       } else {
         return user.profile.initials;
       }
@@ -41,12 +41,3 @@ Template.petitionPage.events({
     });
   }
 });
-
-Template.petitionPage.rendered = function () {
-  Deps.autorun( function () {
-    var petition = Petitions.findOne();
-    $('.petition-status').tooltip('destroy');
-    $('.petition-status').tooltip({title: Template.petitionPage.__helpers[" petitionStatus"]().description});
-    $('.petition-expires').tooltip();
-  });
-}

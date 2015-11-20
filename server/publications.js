@@ -25,7 +25,8 @@ var findPetitions = function (options) {
       votes: 1,
       submitted: 1,
       status: 1,
-      tag_ids: 1
+      tag_ids: 1,
+      lastSignedAt: 1
     }
   });
 };

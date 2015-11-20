@@ -39,4 +39,16 @@ Meteor.startup(function () {
     Migrations.insert({name: "markAllPreviousPetitionsAsPublished"});
   }
 
+  // update all petitions to have a lastSignedAt field
+  if (!Migrations.findOne({name: "addLastSignedAtField"})){
+    Petitions.update({}, {$set: {lastSignedAt: new Date().getTime()}});
+    Migrations.insert({name: "addLastSignedAtField"});
+  }
+
+  // change updates to reference petitionId rather than postId
+  if(!Migrations.findOne({name: "fixUpdatesPetitionIdField"})){
+    Updates.update({}, {$rename: { 'postId' : 'petitionId'}}, {multi: true});
+    Migrations.insert({name: "fixUpdatesPetitionIdField"});
+  }
+
 });
