@@ -1,5 +1,18 @@
 {
-  "LDAP_URL": "ldaps://ldap.rit.edu",
+  "LDAP": {
+      "url": "ldaps://ldap.rit.edu/",
+      "search_ou": "ou=LDAP-Users,dc=rit,dc=edu",
+      //Change this to sAMAccountName if you are using Active Directory      
+      "username_attribute": "uid", 
+      //This is the prefix to your DN, change to something like cn= if you are using Active Directory.             
+      "bind_dn_prefix": "uid=",
+      //This is optional, it will place users in the admin or moderator role if they are
+      //in the specified groups.  This means memberOf is also available in the Meteor.user().profile      
+      "auto_group": {
+          "admin": "CN=Admins,OU=Petitions,OU=Application-Specific-Access,DC=rit,DC=edu",
+          "moderator": "CN=Moderators,OU=Petitions,OU=Application-Specific-Access,DC=rit,DC=edu"
+      }           
+  },  
   "MAIL_URL": "smtp://username@main.ad.rit.edu:password@mymail.ad.rit.edu:587",
   "public" : {
     "ga": {
