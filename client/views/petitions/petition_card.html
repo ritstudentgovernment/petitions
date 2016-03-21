@@ -1,7 +1,12 @@
 <template name="petitionCard">
   <div class="square col-xs-12 col-sm-6 col-md-4 col-lg-4">
     <div class="square-content {{ petition.status }}">
-      <h4 class="petition-sign-count">{{pluralize petition.votes "Signature"}}</h4>
+      <h4 class="petition-sign-count">
+        {{pluralize petition.votes "Signature"}}              
+      </h4>      
+      {{#if signedByUser petition}}
+        <span class="badge signed-badge pull-right"><i class="glyphicon glyphicon-ok"></i> signed</span>
+      {{/if}}  
       <h3 class="petition-title">
         {{#if isExpired this}}
           {{#if isResponded petition}}

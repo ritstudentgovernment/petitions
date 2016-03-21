@@ -1,17 +1,16 @@
 Template.search.events({
-  'keyup #search': function (e) {
+  'keyup #search': _.debounce(function (e) {
+    console.log('search');
     var query = $(e.target).val();
-    if (query.length >= 0) {
-      setTimeout( function() {
+    if (query.length >= 0) {     
         Session.set("waiting", true);
-        EasySearch.search('petitions', query, function (err, data) {
-          Session.set("waiting", false);
-          Session.set("results", data.results);
-        });
-        GAnalytics.event("petition", "search", query);
-      }, 100);
+        var cursor = PetitionsIndex.search(query);
+        Session.set("results", cursor.fetch());
+        Session.set("waiting", false);
+        
+        GAnalytics.event("petition", "search", query);      
     }
-  },
+  }, 500),
   'click a': function (e) {
     $('#modal-search').modal("hide");
   },
@@ -24,7 +23,8 @@ Template.search.helpers({
   }
 });
 
-Template.search.rendered = function () {
-  $("#search").attr('autocomplete', 'on');
+Template.search.rendered = function () {  
   $('#search').focus();
+  Session.set("results", null);
+  Session.set("waiting", false);
 }

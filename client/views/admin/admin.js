@@ -30,7 +30,7 @@ Template.admin.events({
       }
     })
   },
-  'submit form': function(e) {
+  'submit #users form': function(e) {
     e.preventDefault();
 
     var username,

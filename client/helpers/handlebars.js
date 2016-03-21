@@ -84,3 +84,7 @@ var routeUtils = {
 Handlebars.registerHelper('isActiveRoute', function(route) {
   return routeUtils.testRoutes(route) ? 'active' : '';
 });
+
+Handlebars.registerHelper('publicSettings', function(route) {
+  return Meteor.settings.public;
+});

@@ -5,14 +5,16 @@ Template.petitionCard.events({
 });
 
 Template.petitionCard.helpers({
-  isExpired: function(e) {
-    var petition = Petitions.findOne(e.petition._id);
-    if(moment(petition.submitted).isBefore(moment().subtract(1, 'month'))) {
+  isExpired: function(e) {    
+    if(moment(e.petition.submitted).isBefore(moment().subtract(1, 'month'))) {
       return true;
     }
     else {
       return false;
     }
+  },  
+  signedByUser: function(petition) {    
+    return Meteor.user() && _.contains(petition.upvoters, Meteor.user()._id);
   },
   isResponded: function(e) {
     if (e.status == "responded"){

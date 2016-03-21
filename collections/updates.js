@@ -49,18 +49,12 @@ Meteor.methods({
                                     {fields: {username: 1}});
       
       var emails = users.map(function (user) { return user.username + "@rit.edu"; });
-
-      Email.send({
-        bcc: emails,
-        to: "sgnoreply@rit.edu",
-        from: "sgnoreply@rit.edu",
-        subject: "PawPrints - A petition you signed has a status update",
-        text: "Hello, \n\n" +
-              "Petition \"" + petition.title + "\" by " + petition.author + " has a status update: \n\n" +
-              Meteor.settings.public.root_url + "/petitions/" + petition._id +
-              "\n\nThanks, \nRIT Student Government"
+      
+      Mailer.sendTemplatedEmail("petition_status_update", {   
+        bcc: emails
+      }, {
+        petition: petition
       });
-
     }
 
     var update = _.extend(_.pick(updateAttrs, 'title', 'description', 'petitionId'), {

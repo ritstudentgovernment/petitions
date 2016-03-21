@@ -11,7 +11,6 @@ email
 spiderable
 iron:router
 cfs:http-methods
-matteodem:easy-search
 percolatestudio:synced-cron
 meteorhacks:npm
 datariot:ganalytics
@@ -21,5 +20,12 @@ manuelschoebel:ms-seo
 mrt:moment
 sacha:spin
 alanning:roles
-npm-container
 nemo64:bootstrap
+standard-minifiers
+
+
+npm-container
+easy:search
+fileer:string-format
+meteorhacks:ssr
+

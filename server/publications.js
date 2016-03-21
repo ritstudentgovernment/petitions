@@ -15,7 +15,15 @@ var findPetitions = function (options) {
   if (!Roles.userIsInRole(options.userId, ['admin'])) {
     selector['published'] = true;
   }
-
+	
+  if (options.showSigned) {
+    selector.upvoters = options.userId;
+  }
+  
+  if (options.showCreated) {
+    selector.userId = options.userId;
+  }
+  
   return Petitions.find(selector, {
     limit: options.limit,
     sort: sort,
@@ -26,38 +34,45 @@ var findPetitions = function (options) {
       submitted: 1,
       status: 1,
       tag_ids: 1,
-      lastSignedAt: 1
+      lastSignedAt: 1,
+      upvoters: 1
     }
   });
 };
 
-Meteor.publish('petitions', function (limit, sortBy, tagName) {
-  return findPetitions({
+Meteor.publish('petitions', function (limit, sortBy, tagName, showSigned, showCreated) {
+  return findPetitions.call(this, {
     limit: limit,
     sortBy: sortBy,
     tagName: tagName,
-    userId: this.userId
+    userId: this.userId,
+    showSigned: showSigned,
+    showCreated: showCreated
   });
 });
 
 
-Meteor.publish('petitionsInProgress', function (limit, sortBy, tagName) {
-  return findPetitions({
+Meteor.publish('petitionsInProgress', function (limit, sortBy, tagName, showSigned, showCreated) {
+  return findPetitions.call(this, {
     limit: limit,
     sortBy: sortBy,
     tagName: tagName,
     status: "waiting-for-reply",
-    userId: this.userId
+    userId: this.userId,
+    showSigned: showSigned,
+    showCreated: showCreated
   });
 });
 
-Meteor.publish('petitionsWithResponses', function (limit, sortBy, tagName) {
-  return findPetitions({
+Meteor.publish('petitionsWithResponses', function (limit, sortBy, tagName, showSigned, showCreated) {
+  return findPetitions.call(this, {
     limit: limit,
     sortBy: sortBy,
     tagName: tagName,
     status: "responded",
-    userId: this.userId
+    userId: this.userId,
+    showSigned: showSigned,
+    showCreated: showCreated
   });
 });
 

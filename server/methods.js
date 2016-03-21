@@ -15,11 +15,9 @@ Meteor.methods({
 
       this.unblock();
 
-      Email.send({
-        to: "sgweb@rit.edu",
-        from: "sgnoreply@rit.edu",
-        subject: "[petitions] Petition Reported",
-        text: "Petition \"" + petition.title + "\" by " + petition.author + " was reported as " + reason + "."
+      Mailer.sendTemplatedEmail("report_petition", {}, {
+        petition: petition,
+        reason: reason
       });
     }
 
@@ -37,29 +35,25 @@ Meteor.methods({
     if(approved){
       Petitions.update(petitionId, {$set: {published: true,
         submitted: new Date().getTime()}});
-
-        Email.send({
-          bcc: emails,
-          to: "sgnoreply@rit.edu",
-          from: "sgnoreply@rit.edu",
-          subject: "PawPrints - A petition you created has been approved",
-          text: "Hello, \n\n" +
-                "Petition \"" + petition.title + "\" by " + petition.author + " has been approved: \n\n" +
-                Meteor.settings.public.root_url + "/petitions/" + petition._id +
-                "\n\nThanks, \nRIT Student Government"
-        });
+        
+        Mailer.sendTemplatedEmail("petition_approved", {   
+            bcc: emails
+          }, { 
+            petition: petition 
+          }
+        );
+        
         return "Petition Approved!";
 
     }else{
-      Email.send({
-        bcc: emails,
-        to: "sgnoreply@rit.edu",
-        from: "sgnoreply@rit.edu",
-        subject: "PawPrints - A petition you created has been rejected",
-        text: "Hello, \n\n" +
-              "Petition \"" + petition.title + "\" by " + petition.author + " has been rejected for the following reasons: \n\n" +
-              message + "\n\nThanks, \nRIT Student Government"
-      });
+        Mailer.sendTemplatedEmail("petition_rejected", {   
+              bcc: emails
+          },{
+            petition: petition,
+            message: message  
+          }
+        );
+     
       return "Petition Rejected.";
     }
   }

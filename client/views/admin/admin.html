@@ -22,8 +22,13 @@
   </div>
 </template>
 
-<template name="users">
+<template name="users">  
   <div class="tab-pane active" id="users">
+    {{#if publicSettings.ui.roles_locked}}
+        <div class="alert alert-warning" role="alert">
+            <strong>Heads up!</strong> Users are automatically added and removed from groups when they log into the site.  Change someone's LDAP groups if you want them to be an admin or a moderator.
+        </div>
+    {{/if}}
     <div class="col-sm-4">
       <h2>Admins</h2>
       <p>Administrators can manage user roles and petitions.</p>
@@ -79,7 +84,7 @@
                  value="{{this.name}}"
                  disabled>
           <span class="input-group-btn">
-            <button class="btn btn-secondary" type="submit">X</button>
+            <button class="btn btn-secondary" type="submit">&times;</button>
           </span>
         </div>
       </form>
@@ -103,45 +108,51 @@
 
 <template name="userList">
   {{#each users}}
-    <form>
-      <div class="input-group">
-        <input name="action"
-               value="remove"
-               type="hidden">
-        <input name="role"
-               value="{{../role}}"
-               type="hidden">
-        <input name="username"
-               value="{{profile.name}} - {{username}}"
-               type="text"
-               class="form-control"
-               disabled>
-        <span class="input-group-btn">
-          <button class="btn btn-primary"
-                  type="submit">&times;
-                  </button>
-        </span>
-      </div>
-    </form>
+    {{#if publicSettings.ui.roles_locked}}
+        <p>{{profile.name}} - {{username}}</p>
+    {{else}}    
+        <form>
+        <div class="input-group">
+            <input name="action"
+                value="remove"
+                type="hidden">
+            <input name="role"
+                value="{{../role}}"
+                type="hidden">
+            <input name="username"
+                value="{{profile.name}} - {{username}}"
+                type="text"
+                class="form-control"
+                disabled>           
+                <span class="input-group-btn">
+                <button class="btn btn-primary"
+                        type="submit">&times;
+                        </button>
+                </span>            
+        </div>
+        </form>
+    {{/if}}
   {{/each}}
-  <form>
-    <div class="input-group">
-      <input name="action"
-             value="add"
-             type="hidden">
-      <input name="role"
-             value="{{role}}"
-             type="hidden">
-      <input name="username"
-             value=""
-             type="text"
-             placeholder="abc1234"
-             class="form-control">
-      <span class="input-group-btn">
-        <button class="btn btn-primary"
-                type="submit">+
-                </button>
-      </span>
-    </div>
-  </form>
+  {{#unless publicSettings.ui.roles_locked}}
+    <form>
+        <div class="input-group">
+        <input name="action"
+                value="add"
+                type="hidden">
+        <input name="role"
+                value="{{role}}"
+                type="hidden">
+        <input name="username"
+                value=""
+                type="text"
+                placeholder="abc1234"
+                class="form-control">
+        <span class="input-group-btn">
+            <button class="btn btn-primary"
+                    type="submit">+
+                    </button>
+        </span>
+        </div>
+    </form>
+  {{/unless}}
 </template>

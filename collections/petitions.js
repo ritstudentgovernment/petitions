@@ -3,13 +3,13 @@ Petitions = new Meteor.Collection('petitions');
 if (Meteor.isServer)
   Petitions._ensureIndex({title: 1}, {unique: 1});
 
-Petitions.initEasySearch(
-  [ 'title', 'description', 'author' ],
-  {
-    'limit' : 50,
-    'use': 'mongo-db'
-  }
-);
+PetitionsIndex = new EasySearch.Index({
+  collection: Petitions,
+  fields: ['title', 'description', 'author'],
+  engine: new EasySearch.Minimongo()
+}, {
+  limit: 50
+})
 
 var validatePetitionOnCreate = function validatePetitionOnCreate (petitionAttributes) {
 
@@ -103,17 +103,18 @@ Meteor.methods({
 
     if (petition.votes === petition.minimumVotes && Meteor.isServer) {
       var users = Meteor.users.find({roles: {$in: ['notify-threshold-reached']}});
-      var emails = users.map(function (user) { return user.username + "@rit.edu"; });
-
+      var emails = users.map(function (user) { return user.profile.mail || user.username + '@' + Meteor.settings.MAIL.default_domain; });
+	      
       if (!_.isEmpty(emails)) {
-        Email.send({
-          to: emails,
-          from: "sgnoreply@rit.edu",
-          subject: "PawPrints - Petition Reaches Signature Threshold",
-          text: "Petition \"" + petition.title + "\" by " + petition.author + " has reached its minimum signature goal: \n\n" +
-                Meteor.settings.public.root_url + "/petitions/" + petitionId +
-                "\n\nThanks, \nRIT Student Government"
-        });
+        Mailer.sendTemplatedEmail(
+          "petition_threshold_reached", 
+          {   
+            to: emails          
+          }, 
+          {
+            petition: petition          
+          }
+        );
       }
     }
 
@@ -156,16 +157,13 @@ Meteor.methods({
 
       var emails = users.map(function (user) { return user.username + "@rit.edu"; });
 
-      Email.send({
-        bcc: emails,
-        to: "sgnoreply@rit.edu",
-        from: "sgnoreply@rit.edu",
-        subject: "PawPrints - A petition you signed has received a response",
-        text: "Hello, \n\n" +
-              "Petition \"" + petition.title + "\" by " + oldPetition.author + " has recieved a response: \n\n" +
-              Meteor.settings.public.root_url + "/petitions/" + oldPetition._id +
-              "\n\nThanks, \nRIT Student Government"
-      });
+      Mailer.sendTemplatedEmail("petition_response_received", {   
+          bcc: emails
+        },{
+          petition: petition,
+          oldPetition: oldPetition
+        }
+      );      
     }
   },
   delete: function (petitionId) {
