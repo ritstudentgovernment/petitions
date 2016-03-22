@@ -1,3 +1,11 @@
+//This function is called by event handlers and is debounced by a few milliseconds.  Since the Session is reactive,
+//if this is not debounced, a user could have their text overwritten by what was just put in the session a few milliseconds ago.
+var savePetitionSessionState = function() {
+  Session.set('petition.title', $('*[name=title]').val());
+  Session.set('petition.description', $('textarea[name=description]').val());
+  Session.set('petition.tag_ids', _.pluck($('#s2id_tags').select2('data'), '_id'));  
+};
+
 Template.petitionSubmit.helpers({
   'emptyPetition': function() {
 
@@ -45,7 +53,7 @@ Template.petitionSubmit.helpers({
       tag_ids: Session.get('petition.tag_ids')
     }
   },
-  'title': function() {
+  'title': function() {    
     return Session.get('petition.title');
   },
   'author': function() {
@@ -55,11 +63,15 @@ Template.petitionSubmit.helpers({
 
 Template.petitionSubmit.events({
   'submit form': function(e) {
+    //Since this function is debounced by event handlers, it may not have run yet.  This is to ensure someone doesn't
+    //quickly write up a petition and hammer the enter key before the debounced function is run.
+    savePetitionSessionState();
     e.preventDefault();
 
+    var markupStr = $('#summernote').summernote('code');
     var petition = {
       title: Session.get('petition.title'),
-      description: Session.get('petition.description'),
+      description: markupStr,
       tag_ids: Session.get('petition.tag_ids')
     }
 
@@ -70,27 +82,27 @@ Template.petitionSubmit.events({
         if (error.error === 302)
           Router.go('petitionPage', {_id: error.details})
       } else {
+        
         Session.set('petition.title', '');
         Session.set('petition.description', '');
         if(Singleton.findOne().moderation){
           Router.go('index');
-          throwError("Petition is pending approval, you will recieve an email once it has gone thorugh the approval process.");
+          throwError("Petition is pending approval, you will receive an email once it has gone thorugh the approval process.");
         }else{
           Router.go('petitionPage', {_id: id});
         }
       }
     });
   },
-  'keyup *[name=title]': function (e) {
-    Session.set('petition.title', $('*[name=title]').val());
-  },
-  'keyup *[name=description]': function (e) {
-    Session.set('petition.description', $('textarea[name=description]').val());
-  }
+  'keyup *[name=title]': _.debounce(savePetitionSessionState, 250),
+  'keyup *[name=description]': _.debounce(savePetitionSessionState, 250)
 });
 
 Template.petitionSubmit.rendered = function () {
   Session.set('petition.tag_ids', []);
+
+  $('#summernote').summernote();
+
   Deps.autorun(function () {
     $('#tags').select2({
       placeholder: "Petition Tags",
@@ -106,18 +118,7 @@ Template.petitionSubmit.rendered = function () {
     });
     $('.select2-search-field>input').addClass("input");
   });
-  $('#tags').on("change", function (e) {
-    var tag_ids = Session.get('petition.tag_ids')
-    if (e.added) {
-      tag_ids.push(e.added._id);
-      Session.set('petition.tag_ids', tag_ids);
-    } else if (e.removed) {
-      var tag_ids = _.without(tag_ids, e.removed._id);
-      Session.set('petition.tag_ids', tag_ids);
-    } else {
-      // to-do
-    }
-  });
+  $('#tags').on("change", savePetitionSessionState);
   // Accessing selected tags
   // $('#s2id_tags').select2('data');
 };

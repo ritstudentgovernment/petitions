@@ -1,5 +1,20 @@
 @import "_variables.import.less";
 
+.container h1 {
+  color: @brand-primary;
+}
+
+.filter-checkboxes {
+    text-overflow: ellipsis;
+    overflow:hidden;
+    white-space:nowrap;
+    max-width: 300px;
+  .filter-checkbox {
+    padding:5px 10px;
+    
+  }
+}
+
 .author {
   font-weight: 300;
   margin: 0;
@@ -102,6 +117,13 @@
 
 .petition-sign-count {
   font-size: 18px;
+  display:inline-block;    
+}
+
+.signed-badge {
+  padding: 7px 7px 9px 7px;
+  margin-left: 10px;
+  position: relative;
 }
 
 .petition-social-wrapper {

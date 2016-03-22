@@ -1,7 +1,7 @@
 <template name="petitionPage">
   <div class="container" style="background: white;width:100%!important;">
     <div class="container">
-            <h1 style="color:#f36e21;" class="long-string-fix text-center"><strong>{{petition.title}}</strong></h1>
+            <h1 class="long-string-fix text-center"><strong>{{petition.title}}</strong></h1>
             <p class="text-center">
               {{#each petition.tag_ids}}
                 {{#with tag this}}
@@ -11,13 +11,18 @@
               {{#if isInRole 'admin' 'moderator'}}
                 <a href="{{pathFor 'petitionEdit' _id=petition._id}}"><span class="label label-primary">EDIT</span></a>
               {{/if}}
+              {{#if petition.pending}}
+                <span class="label label-danger"><span class="glyphicon glyphicon-warning-sign"></span> Pending Moderation</span>
+              {{/if}}
             </p>
             <div class="text-center" style="margin-bottom:15px;">
               <p>Petition by {{petition.author}}</p>
-              {{#if updates}}
-                {{#each updates}}
-                  <p>Update by {{this.author}}</p>
-                {{/each}}
+              {{#if show_history}}
+                {{#if updates}}
+                  {{#each updates}}
+                    <p>Update by {{this.author}}</p>
+                  {{/each}}
+                {{/if}}
               {{/if}}
             </div>
     </div>

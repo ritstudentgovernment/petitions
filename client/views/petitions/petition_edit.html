@@ -58,13 +58,7 @@
   <input id="tags" style="width: 100%; margin-bottom: 10px;">
 
   <label class="control-label" for="description">Description</label>
-  <textarea name="description"
-            class="form-group form-control input-lg"
-            maxlength="4000"
-            placeholder="My Petition's Description"
-            type="text"
-            rows="15"
-            value="{{ petition.description }}"></textarea>
+  <div id="summernote1"></div>
 </template>
 
 <template name="petitionUpdates">
@@ -87,13 +81,7 @@
     <p>Use response for the <u>final</u> petition update, e.g., the final decision reached by Administration, the consensus reached by the committee formed for the petition, etc.</p>
     <p>When a response is initially petitioned, an e-mail is dispatched to petition signatories who subscribe to updates.</p>
   </div>
-  <textarea name="response"
-            class="form-group form-control input-lg"
-            maxlength="4000"
-            placeholder="Petition Response"
-            type="text"
-            rows="15"
-            value="{{ petition.response }}"></textarea>
+  <div id="summernote3"></div>
 
 </template>
 

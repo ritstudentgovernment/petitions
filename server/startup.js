@@ -5,5 +5,5 @@ Meteor.startup(function () {
     console.log("Setting Default");
     Singleton.update({}, {$set: { moderation: false}});
   }
-  process.env.MAIL_URL = Meteor.settings.MAIL_URL;
+  process.env.MAIL_URL = Meteor.settings.MAIL.gateway_url;
 });

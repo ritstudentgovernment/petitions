@@ -1,5 +1,5 @@
 Template.userEdit.events({
-  'submit form': function(e) {
+  'submit #notification-form': function(e) {
     e.preventDefault();
 
     var notificationPrefs = {
@@ -13,6 +13,22 @@ Template.userEdit.events({
         throwError(error.reason);
       } else {
         throwError("Notification preferences saved.");
+      }
+    });
+  },
+  'submit #profile-form': function(e) {
+    e.preventDefault();
+
+    var profilePrefs = {
+      initials: $(e.target).find('[name=initials]').val()      
+    };
+    
+    Meteor.call('editProfile', profilePrefs, function(error) {
+      if (error) {
+        // display the error to the user
+        throwError(error.reason);
+      } else {
+        throwError("Profile saved.");
       }
     });
   },

@@ -30,7 +30,7 @@ Template.admin.events({
       }
     })
   },
-  'submit form': function(e) {
+  'submit #users form': function(e) {
     e.preventDefault();
 
     var username,
@@ -55,5 +55,44 @@ Template.admin.events({
         GAnalytics.event("account", "edit");
       }
     });
+  }
+});
+
+Template.interface.events({
+  'submit #changeParallax': function(e){
+    e.preventDefault();
+    Meteor.call('toggleParallax');
+  },
+  'submit #changePetitionHistoryDisplay': function(e){
+    e.preventDefault();
+    Meteor.call('togglePetitionHistoryDisplay');
+  },
+  'submit #changeUpdateAuthorDisplay': function(e){
+    e.preventDefault();
+    Meteor.call('toggleUpdateAuthorDisplay');
+  }
+});
+
+Template.interface.helpers({
+  'parallaxStyle' : function(){
+    if(Singleton.findOne().parallax){
+      return 'Enabled'
+    }else{
+      return 'Disabled'
+    }
+  },
+  'petitionHistoryDisplayStyle' : function(){
+    if(Singleton.findOne().petitionHistoryDisplay){
+      return 'Enabled'
+    }else{
+      return 'Disabled'
+    }
+  },
+  'updateAuthorDisplayStyle' : function(){
+    if(Singleton.findOne().updateAuthorDisplay){
+      return 'Enabled'
+    }else{
+      return 'Disabled'
+    }
   }
 });

@@ -16,14 +16,11 @@ var validateUpdate = function (updateAttrs, petition) {
   if (!updateAttrs.title || updateAttrs.title.length > 80)
     throw new Meteor.Error(422, "Title is longer than 80 characters or not present.");
 
-  if (!updateAttrs.description || updateAttrs.description.length > 4000)
-    throw new Meteor.Error(422, "Description is longer than 4000 characters or not present.");
+  if (!updateAttrs.description || updateAttrs.description.length > 10000)
+    throw new Meteor.Error(422, "Description is longer than 10000 characters or not present.");
 
   if (!updateAttrs.petitionId)
     throw new Meteor.Error(422, "The title's petitionId is missing.");
-
-  if (petition.status == "responded")
-    throw new Meteor.Error(422, "Updates can't be added to petitions with responses.");
 
 };
 
@@ -44,24 +41,21 @@ Meteor.methods({
 
       Petitions.update(updateAttrs.petitionId, {$set: {status: "waiting-for-reply"}});
 
-      var users = Meteor.users.find({$and: [{'notify.updates': true},
-                                           {_id: {$in: petition.upvoters}}]},
-                                    {fields: {username: 1}});
-      
-      var emails = users.map(function (user) { return user.username + "@rit.edu"; });
 
-      Email.send({
-        bcc: emails,
-        to: "sgnoreply@rit.edu",
-        from: "sgnoreply@rit.edu",
-        subject: "PawPrints - A petition you signed has a status update",
-        text: "Hello, \n\n" +
-              "Petition \"" + petition.title + "\" by " + petition.author + " has a status update: \n\n" +
-              Meteor.settings.public.root_url + "/petitions/" + petition._id +
-              "\n\nThanks, \nRIT Student Government"
+      var users = Meteor.users.find({$and: [{'notify.updates': true},
+                                           {_id: {$in: petition.subscribers}}]},
+                                    {fields: {username: 1}});
+
+      var emails = users.map(function (user) { return user.username + Meteor.settings.MAIL.default_domain; });
+
+      Mailer.sendTemplatedEmail("petition_status_update", {
+        bcc: emails
+      }, {
+        petition: petition
       });
 
     }
+    
 
     var update = _.extend(_.pick(updateAttrs, 'title', 'description', 'petitionId'), {
       created_at: new Date().getTime(),
@@ -90,7 +84,7 @@ Meteor.methods({
     });
 
     Updates.update(updateAttrs._id, {$set: update });
-    
+
   },
   'deleteUpdate': function (updateAttrs) {
 

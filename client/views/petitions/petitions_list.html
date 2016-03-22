@@ -36,7 +36,7 @@
     {{> petitionGroup petitions=petitions
                       petitionOrder=petitionOrder
                       title="Responded"
-                      description="These petitions have recieved official responses."
+                      description="These petitions have received official responses."
                       tags=tags
                       nopetitions="No petitions have received responses."
                       displayheader=true}}
@@ -63,6 +63,20 @@
               <option {{selected petitionOrder "votes"}} value="votes">Most Signatures</option>
             </select>
             <h4 class="text-center hidden-xs hidden-sm"><strong>Filter</strong></h4>
+            {{# if loggedIn}}
+              <div class="filter-checkboxes">
+                <div class="filter-checkbox">
+                  <input id='show-signed' type='checkbox' /> 
+                  <label for='show-signed'>My signed petitions</label>
+                </div>
+                {{# if moderation}}
+                    <div class="filter-checkbox">
+                    <input id='show-created' type='checkbox' /> 
+                    <label for='show-created'>My approved petitions</label>
+                    </div>
+                {{/if}}
+              </div>
+            {{/if}}
             <div class="tag-box hidden-xs hidden-sm" id="tag-select">
               <div class="list-group">
                 <a id="all" class="list-group-item {{ isActiveTag 'all' }} tag-item" href="">All</a>
