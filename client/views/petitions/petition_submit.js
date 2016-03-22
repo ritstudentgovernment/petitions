@@ -68,9 +68,10 @@ Template.petitionSubmit.events({
     savePetitionSessionState();
     e.preventDefault();
 
+    var markupStr = $('#summernote').summernote('code');
     var petition = {
       title: Session.get('petition.title'),
-      description: Session.get('petition.description'),
+      description: markupStr,
       tag_ids: Session.get('petition.tag_ids')
     }
 
@@ -99,6 +100,9 @@ Template.petitionSubmit.events({
 
 Template.petitionSubmit.rendered = function () {
   Session.set('petition.tag_ids', []);
+
+  $('#summernote').summernote();
+
   Deps.autorun(function () {
     $('#tags').select2({
       placeholder: "Petition Tags",

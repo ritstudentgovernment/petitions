@@ -92,6 +92,7 @@ spacebars-compiler@1.0.7
 spiderable@1.0.9
 standard-app-packages@1.0.6
 standard-minifiers@1.0.2
+summernote:standalone@0.8.1
 templating@1.1.5
 templating-tools@1.0.0
 tmeasday:crypto-base@3.1.2

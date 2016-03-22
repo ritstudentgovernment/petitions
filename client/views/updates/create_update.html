@@ -27,14 +27,7 @@
           <p>{{fromNow null}} BY {{upcase user.profile.name}}</p>
         </h6>
       {{/if}}
-      <p><textarea name="description"
-                   class="form-group form-control input-clear"
-                   maxlength="4000"
-                   placeholder="Update Description"
-                   type="text"
-                   rows="6"
-                   value="{{ update.description }}"
-                   style="font-size: 16px; resize: none;"></textarea></p>
+      <div id="summernoteUpdate{{update._id}}"></div>
 
       <div class="btn-group">
         <button type="submit"

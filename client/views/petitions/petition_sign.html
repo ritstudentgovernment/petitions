@@ -12,3 +12,18 @@
  </div>
   </form>
 </template>
+
+<template name="petitionSub">
+  <form>
+    <input name="_id"
+           value="{{_id}}"
+           type="hidden"/>
+           <div class="row">
+   <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
+     <input type="submit"
+            class="btn btn-block btn-primary {{btnclass}} {{subscribedClass}}"
+            value="{{subscribeBtnText}}"/>
+   </div>
+ </div>
+  </form>
+</template>

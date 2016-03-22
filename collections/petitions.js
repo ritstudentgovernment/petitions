@@ -45,8 +45,8 @@ var validatePetition = function validatePetition (petitionAttributes) {
     throw new Meteor.Error(422, 'Please fill in a description.');
 
   var descriptionLength = petitionAttributes.title.length;
-  if (descriptionLength > 4000)
-    throw new Meteor.Error(422, 'Description must not exceed 4000 characters. Currently: ' + descriptionLength );
+  if (descriptionLength > 10000)
+    throw new Meteor.Error(422, 'Description must not exceed 10000 characters. Currently: ' + descriptionLength );
 };
 
 Meteor.methods({
@@ -64,6 +64,7 @@ Meteor.methods({
       author: user.profile.name,
       submitted: new Date().getTime(),
       upvoters: [user._id],
+      subscribers: [user._id],
       votes: 1,
       minimumVotes: Singleton.findOne().minimumThreshold,
       published: publishByDefault,
@@ -94,9 +95,11 @@ Meteor.methods({
 
     Petitions.update({
       _id: petitionId,
-      upvoters: {$ne: user._id}
+      upvoters: {$ne: user._id},
+      subscribers: {$ne: user._id}
     }, {
       $addToSet: {upvoters: user._id},
+      $addToSet: {subscribers: user._id},
       $inc: {votes: 1},
       $set: {lastSignedAt: new Date().getTime()}
     });
@@ -104,27 +107,45 @@ Meteor.methods({
     if (petition.votes === petition.minimumVotes && Meteor.isServer) {
       var users = Meteor.users.find({roles: {$in: ['notify-threshold-reached']}});
       var emails = users.map(function (user) { return user.profile.mail || user.username + '@' + Meteor.settings.MAIL.default_domain; });
-	      
+
       if (!_.isEmpty(emails)) {
         Mailer.sendTemplatedEmail(
-          "petition_threshold_reached", 
-          {   
-            to: emails          
-          }, 
+          "petition_threshold_reached",
           {
-            petition: petition          
+            to: emails
+          },
+          {
+            petition: petition
           }
         );
       }
     }
 
   },
+  subscribe: function(petitionId) {
+    var user = Meteor.user();
 
+    if (!user)
+      throw new Meteor.Error(401, "You need to login to subscribe to a petition.");
+
+    var petition = Petitions.findOne(petitionId);
+
+    if (!petition.published)
+      throw new Meteor.Error(401, "This petition is not published.");
+
+    Petitions.update({
+      _id: petitionId,
+      subscribers: {$ne: user._id}
+    }, {
+      $addToSet: {subscribers: user._id}
+    });
+  },
   edit: function (petitionId, petitionAttributes) {
 
     var oldPetition = Petitions.findOne(petitionId, {
                     fields: { response: 1,
                               upvoters: 1,
+                              subscribers: 1,
                               author: 1 }});
 
     validatePetition(petitionAttributes);
@@ -151,19 +172,19 @@ Meteor.methods({
 
       this.unblock();
 
-      var users = Meteor.users.find({$and: [{'notify.response': true},
-                                           {_id: {$in: oldPetition.upvoters}}]},
+      var notifyees = Meteor.users.find({$and: [{'notify.response': true},
+                                           {_id: {$in: oldPetition.subscribers}}]},
                                     {fields: {username: 1}});
 
-      var emails = users.map(function (user) { return user.username + "@rit.edu"; });
+      var emails = notifyees.map(function (user) { return user.username + Meteor.settings.MAIL.default_domain; });
 
-      Mailer.sendTemplatedEmail("petition_response_received", {   
+      Mailer.sendTemplatedEmail("petition_response_received", {
           bcc: emails
         },{
           petition: petition,
           oldPetition: oldPetition
         }
-      );      
+      );
     }
   },
   delete: function (petitionId) {

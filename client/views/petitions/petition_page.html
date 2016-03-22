@@ -11,13 +11,18 @@
               {{#if isInRole 'admin' 'moderator'}}
                 <a href="{{pathFor 'petitionEdit' _id=petition._id}}"><span class="label label-primary">EDIT</span></a>
               {{/if}}
+              {{#if petition.pending}}
+                <span class="label label-danger"><span class="glyphicon glyphicon-warning-sign"></span> Pending Moderation</span>
+              {{/if}}
             </p>
             <div class="text-center" style="margin-bottom:15px;">
               <p>Petition by {{petition.author}}</p>
-              {{#if updates}}
-                {{#each updates}}
-                  <p>Update by {{this.author}}</p>
-                {{/each}}
+              {{#if show_history}}
+                {{#if updates}}
+                  {{#each updates}}
+                    <p>Update by {{this.author}}</p>
+                  {{/each}}
+                {{/if}}
               {{/if}}
             </div>
     </div>

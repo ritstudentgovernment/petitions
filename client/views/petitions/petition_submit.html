@@ -16,13 +16,7 @@
                      type="text"
                      value="{{ session 'petition.title' }}" />
               <input id="tags" style="width: 100%; margin-bottom: 10px;" />
-              <textarea name="description"
-                        class="form-group form-control input-lg"
-                        maxlength="4000"
-                        placeholder="Explanation and reasoning behind petition. Why should someone sign? How will it improve the community?"
-                        type="text"
-                        rows="10"
-                        value="{{ session 'petition.description' }}"></textarea>
+              <div id="summernote">Explanation and reasoning behind petition. Why should someone sign? How will it improve the community?</div>
               <div class="visible-sm alert alert-warning">Your full name will be made public with this petition. If you aren't comfortable with that, consider working with your SG senator/rep or a relevant administrator to have it posted from another account.</div>
             </div>
           </div>

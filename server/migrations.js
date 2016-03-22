@@ -66,4 +66,21 @@ Meteor.startup(function () {
     Migrations.insert({name: "fixUpdatesPetitionIdField"});
   }
 
+  // Adds all upvoters to subscribers for every petition.
+  if(!Migrations.findOne({name: "addUpvotersToSubscribers"})){
+    //Petitions.update({}, {$set: {subscribers: upvoters}});
+    Petitions.find().forEach(function (petition){
+      Meteor.users.find({_id: {$in: petition.upvoters}},{fields: {username: 1}}).forEach(function (u){
+        Petitions.update({
+            _id: petition.petitionId,
+            subscribers: {$ne: u}
+          }, {
+            $addToSet: {subscribers: u}
+          });
+      });
+
+    });
+    Migrations.insert({name: "addUpvotersToSubscribers"});
+  }
+
 });

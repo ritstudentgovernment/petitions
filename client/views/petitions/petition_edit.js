@@ -1,10 +1,12 @@
 Template.petitionEdit.events({
   'submit #petitionForm': function(e) {
     e.preventDefault();
+    var styled_description = $('#summernote1').summernote('code');
+    var styled_response = $('#summernote3').summernote('code');
     var petitionProperties = {
       title: $(e.target).find('[name=title]').val(),
-      description: $(e.target).find('[name=description]').val(),
-      response: $(e.target).find('[name=response]').val(),
+      description: styled_description,
+      response: styled_response,
       tag_ids: _.pluck($('#s2id_tags').select2('data'), '_id')
     };
     Meteor.call('edit', this.petition._id, petitionProperties, function (err) {
@@ -35,6 +37,11 @@ Template.petitionEdit.events({
 
 Template.petitionEdit.rendered = function () {
   var _this = this;
+  $('#summernote1').summernote();
+  $('#summernote2').summernote();
+  $('#summernote3').summernote();
+  $('#summernote1').summernote('code', this.data.petition.description);
+  $('#summernote3').summernote('code', this.data.petition.response);
   Deps.autorun(function () {
     $('#tags').select2({
       placeholder: "Petition Tags",

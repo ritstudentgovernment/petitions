@@ -35,7 +35,8 @@ var findPetitions = function (options) {
       status: 1,
       tag_ids: 1,
       lastSignedAt: 1,
-      upvoters: 1
+      upvoters: 1,
+      pending: 1
     }
   });
 };
@@ -101,6 +102,7 @@ Meteor.publish('singlePetition', function (id) {
       response: 1,
       responded_at: 1,
       upvoters: 1,
+      subscribers: 1,
       minimumVotes: 1,
       status: 1,
       tag_ids: 1,
