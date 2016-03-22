@@ -68,9 +68,10 @@ Template.petitionSubmit.events({
     savePetitionSessionState();
     e.preventDefault();
 
+    var markupStr = $('#summernote').summernote('code');
     var petition = {
       title: Session.get('petition.title'),
-      description: Session.get('petition.description'),
+      description: markupStr,
       tag_ids: Session.get('petition.tag_ids')
     }
 
@@ -86,7 +87,7 @@ Template.petitionSubmit.events({
         Session.set('petition.description', '');
         if(Singleton.findOne().moderation){
           Router.go('index');
-          throwError("Petition is pending approval, you will recieve an email once it has gone thorugh the approval process.");
+          throwError("Petition is pending approval, you will receive an email once it has gone thorugh the approval process.");
         }else{
           Router.go('petitionPage', {_id: id});
         }
@@ -99,6 +100,9 @@ Template.petitionSubmit.events({
 
 Template.petitionSubmit.rendered = function () {
   Session.set('petition.tag_ids', []);
+
+  $('#summernote').summernote();
+
   Deps.autorun(function () {
     $('#tags').select2({
       placeholder: "Petition Tags",

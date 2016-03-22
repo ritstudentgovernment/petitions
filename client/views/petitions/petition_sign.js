@@ -27,6 +27,48 @@ Template.petitionSign.events({
   }
 });
 
+Template.petitionSub.events({
+  'submit form': function(e) {
+    e.preventDefault();
+    var petition = this.petition;
+    var sub = function () {
+      Meteor.call('subscribe', petition._id, function(error) {
+      if (error)
+        throwError(error.reason);
+      });
+    };
+    if (Meteor.userId()) {
+      sub();
+    } else {
+      Session.set("loginMsg", "Please login to subscribe.");
+      $('#loginModal').modal('show');
+      $('#loginModal').on('hidden.bs.modal', function () {
+        if (Meteor.userId())
+          sub();
+      });
+    }
+  }
+});
+
+Template.petitionSub.helpers({
+  subscribedClass: function() {
+    var userId = Meteor.userId();
+    if (userId && this.petition && _.include(this.petition.subscribers, userId)) {
+      return 'disabled';
+    } else {
+      return '';
+    }
+  },
+  subscribeBtnText: function() {
+    var userId = Meteor.userId();
+    if (userId && this.petition && _.include(this.petition.subscribers, userId)) {
+      return 'Subscribed';
+    } else {
+      return 'Subscribe';
+    }
+  }
+})
+
 Template.petitionSign.helpers({
   signedClass: function() {
     var userId = Meteor.userId();

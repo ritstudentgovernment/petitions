@@ -38,9 +38,9 @@ Template.petitionGroup.helpers({
    },
    'moderation' : function(){
     if(Singleton.findOne().moderation){
-      return true
+      return true;
     }else{
-      return false
+      return false;
     }
   }
 });

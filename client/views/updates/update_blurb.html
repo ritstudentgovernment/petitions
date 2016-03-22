@@ -1,17 +1,6 @@
 <template name="updateBlurb">
-  <div class="row">
-    <div class="col-md-9">
-
-    </div>
-    <div class="col-md-3 text-right">
-
-    </div>
-    <div class="col-md-12 petition-subtitle text-center">
-
-    </div>
-  </div>
   <h3 class="update-title text-center">{{this.title}}</h3>
-  <p class="petition-subtitle text-center">Update by {{this.author}} - {{fromNow this.created_at}} </p>
+  <p class="petition-subtitle text-center">{{#if showAuthor}}Update by {{this.author}} - {{/if}}{{fromNow this.created_at}} </p>
   <hr />
   <p>{{{breaklines this.description }}}</p>
 </template>

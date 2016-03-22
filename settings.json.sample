@@ -1,23 +1,25 @@
 {
   "LDAP": {
-      "url": "ldaps://ldap.rit.edu/",
-      "search_ou": "ou=LDAP-Users,dc=rit,dc=edu",
-      //Change this to sAMAccountName if you are using Active Directory      
-      "username_attribute": "uid", 
-      //This is the prefix to your DN, change to something like cn= if you are using Active Directory.             
-      "bind_dn_prefix": "uid=",
-      //This is optional, it will place users in the admin or moderator role if they are
-      //in the specified groups.  This means memberOf is also available in the Meteor.user().profile      
-      "auto_group": {
-          "admin": "CN=Admins,OU=Petitions,OU=Application-Specific-Access,DC=rit,DC=edu",
-          "moderator": "CN=Moderators,OU=Petitions,OU=Application-Specific-Access,DC=rit,DC=edu"
-      }           
+    "__comments": [
+      " username_attribute: Change to sAMAccountName if you are using Active Directory                                                              ",
+      " bind_dn_prefix:     This is the prefix to your DN, change to something like cn= if you are using Active Directory.                          ",
+      " auto_group:         This is optional, it will place users in the admin or moderator role if they are                                        ", 
+      "                     in the specified groups.  This means memberOf is also available in the Meteor.user().profile                            "   
+    ],
+    "url": "ldaps://ldap.rit.edu/",
+    "search_ou": "ou=LDAP-Users,dc=rit,dc=edu",          
+    "username_attribute": "uid",
+    "bind_dn_prefix": "uid=",       
+    "auto_group": {
+        "admin": "CN=Admins,OU=Petitions,OU=Application-Specific-Access,DC=rit,DC=edu",
+        "moderator": "CN=Moderators,OU=Petitions,OU=Application-Specific-Access,DC=rit,DC=edu"
+    }           
   },  
   "MAIL": {
     "__comments": [
-      " default_doman:  Appended to the username to construct an email address if no email address is present                                        ",
-      " gateway_url:  The MAIL_URL environment variable, more information here:  http://docs.meteor.com/#/full/email                                 ",
-      " templates: used by the Mailer object and provide defaults for the Email.send function.  Example:                                             ",
+      " default_domain:   Appended to the username to construct an email address if no email address is present                                      ",
+      " gateway_url:      The MAIL_URL environment variable, more information here:  http://docs.meteor.com/#/full/email                             ",
+      " templates:        used by the Mailer object and provide defaults for the Email.send function.  Example:                                      ",
       "   {                                                                                                                                          ",
       "     'say_hello': {                                                                                                                           ",
       "       'subject': 'Hello!',      Default subject for the email, can be overridden by the caller                                               ",
@@ -26,7 +28,7 @@
       "     }                                                                                                                                        ", 
       "   }                                                                                                                                          ",
       " template_defaults:  Optional settings that are applied last to every template, so they are easily overridden                                 ",
-      " template_overrides:  Optional settings that are applied first to every template, they are most useful for local testing.                     "
+      " template_overrides: Optional settings that are applied first to every template, they are most useful for local testing.                      "
     ],
     
     "default_domain": "rit.edu",    
@@ -66,6 +68,11 @@
     }
   },  
   "public" : {
+    "ui": {
+      "roles_locked": false,
+      "initials_locked": true,
+      "carousel_images": ["/carousel_1.png", "/carousel_2.png", "/carousel_3.png"]
+    },  
     "ga": {
       "account":"UA-XXXXXXXX-Y"
     },

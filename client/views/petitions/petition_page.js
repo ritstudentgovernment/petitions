@@ -25,6 +25,9 @@ Template.petitionPage.helpers({
         return user.profile.initials;
       }
     });
+  },
+  'show_history': function () {
+    return Singleton.findOne().petitionHistoryDisplay;
   }
 });
 

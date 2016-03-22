@@ -1,5 +1,5 @@
 <template name="petitionCard">
-  <div class="square col-xs-12 col-sm-6 col-md-4 col-lg-4">
+  <div class="square col-xs-12 col-sm-6 col-md-4 col-lg-4 {{#if petition.pending}}bg-warning{{/if}}">
     <div class="square-content {{ petition.status }}">
       <h4 class="petition-sign-count">
         {{pluralize petition.votes "Signature"}}              
@@ -40,7 +40,9 @@
         {{/with}}
       {{/each}}
       </p>
-
+      {{#if petition.pending}}
+        <a id="card" class="label label-danger card-tag"><i class="glyphicon glyphicon-warning-sign"></i> Pending Moderation</a>
+      {{/if}}
     </div>
   </div>
 </template>
