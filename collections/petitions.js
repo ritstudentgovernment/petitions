@@ -110,7 +110,7 @@ Meteor.methods({
     if(Meteor.isServer){
       if (petition.votes === petition.minimumVotes && Meteor.isServer) {
         var users = Meteor.users.find({roles: {$in: ['notify-threshold-reached']}});
-        var emails = users.map(function (user) { return user.profile.mail || user.username + '@' + Meteor.settings.MAIL.default_domain; });
+        var emails = users.map(function (user) { return user.profile.mail || user.username + Meteor.settings.MAIL.default_domain; });
 
         if (!_.isEmpty(emails)) {
           Mailer.sendTemplatedEmail(
