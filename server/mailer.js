@@ -45,7 +45,8 @@ Mailer = {
           //This means there was a general error either finding the template passed in or in rendering the compiled template.
           throw new Meteor.Error(500, 'There was an error rendering the email template for {0} template.  {1}'.format(templateKey, e.toString()));
         }
-        
+        template.subject = template.subject.replace(/_/g, " "); //Convert _ to space to accommodate environment + JSON config (e.g. meteor unit file)
+
         //Apply string formatting to every string variable in the template, this allows you to have a variable subject for example.
         template = _.object(_.map(template, function(value, key) {
           var finalValue = value;
