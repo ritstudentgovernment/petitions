@@ -1,5 +1,5 @@
 /*
- * Uses the settings file to create default emails.  Thus if we don't have at least the MAIL 
+ * Uses the settings file to create default emails.  Thus if we don't have at least the MAIL
  * key set up this module is unusable and the site won't really work.
  */
 if(!Meteor.settings.MAIL)
@@ -17,26 +17,26 @@ Mailer = {
         context = _.extend({}, {
           settings: Meteor.settings
         }, context || {});
-        
-        
+
+
         //You can override the templateSettings.template variable to render a different template in a different package.
         templateSettings = Meteor.settings.MAIL.templates[templateKey];
         //If the template doesn't exist we shouldn't go any further.
         if(!templateSettings)
           throw new Meteor.Error(500, 'Tried to send an email with nonexistent template {0}.'.format(templateKey));
-          
-        try {        
-          /* 
+
+        try {
+          /*
           * The settings for an email trickle down from most to least important:
           * 1. Override template settings
           * 2. Overrides passed in
           * 3. Individual template settings
           * 4. Default template settings
           * 5. Settings in this file (like text)
-          */               
-          template = _.extend(              
-              { text: SSR.render(templateKey, context) }, 
-              Meteor.settings.MAIL.template_defaults, 
+          */
+          template = _.extend(
+              { text: SSR.render(templateKey, context) },
+              Meteor.settings.MAIL.template_defaults,
               templateSettings,
               overrides,
               Meteor.settings.MAIL.template_overrides
@@ -52,11 +52,14 @@ Mailer = {
           if(typeof value === "string") {
             finalValue = value.format(context);
           }
-          
+
           return [ key, finalValue ];
         }));
+        try{
         template.subject = template.subject.replace(/_/g, " "); //Convert _ to space to accommodate environment + JSON config (e.g. meteor unit file)
-
+}catch(e){
+  //ignore
+}
         try {
             Email.send(template);
         }catch(e) {
