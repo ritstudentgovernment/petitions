@@ -3,18 +3,18 @@
     "__comments": [
       " username_attribute: Change to sAMAccountName if you are using Active Directory                                                              ",
       " bind_dn_prefix:     This is the prefix to your DN, change to something like cn= if you are using Active Directory.                          ",
-      " auto_group:         This is optional, it will place users in the admin or moderator role if they are                                        ", 
-      "                     in the specified groups.  This means memberOf is also available in the Meteor.user().profile                            "   
+      " auto_group:         This is optional, it will place users in the admin or moderator role if they are                                        ",
+      "                     in the specified groups.  This means memberOf is also available in the Meteor.user().profile                            "
     ],
     "url": "ldaps://ldap.rit.edu/",
-    "search_ou": "ou=LDAP-Users,dc=rit,dc=edu",          
+    "search_ou": "ou=LDAP-Users,dc=rit,dc=edu",
     "username_attribute": "uid",
-    "bind_dn_prefix": "uid=",       
+    "bind_dn_prefix": "uid=",
     "auto_group": {
         "admin": "CN=Admins,OU=Petitions,OU=Application-Specific-Access,DC=rit,DC=edu",
         "moderator": "CN=Moderators,OU=Petitions,OU=Application-Specific-Access,DC=rit,DC=edu"
-    }           
-  },  
+    }
+  },
   "MAIL": {
     "__comments": [
       " default_domain:   Appended to the username to construct an email address if no email address is present                                      ",
@@ -25,15 +25,15 @@
       "       'subject': 'Hello!',      Default subject for the email, can be overridden by the caller                                               ",
       "       'to': 'hello@rit.edu',    Default to address for the email, could also be an array like ['hello@rit.edu', 'goodbye@rit.edu']           ",
       "       'template': 'say_hello'   Required key for the template, a template should exist at the path /private/email_templates/say_hello.html   ",
-      "     }                                                                                                                                        ", 
+      "     }                                                                                                                                        ",
       "   }                                                                                                                                          ",
       " template_defaults:  Optional settings that are applied last to every template, so they are easily overridden                                 ",
       " template_overrides: Optional settings that are applied first to every template, they are most useful for local testing.                      "
     ],
-    
-    "default_domain": "rit.edu",    
-    "gateway_url": "smtp://username:password@smtp.rit.edu:25",        
-    "templates": {      
+
+    "default_domain": "@rit.edu",    
+    "gateway_url": "smtp://username:password@smtp.rit.edu:25",
+    "templates": {
       "report_petition": {
         "subject": "[petitions] Petition Reported",
         "template": "report_petition"
@@ -48,7 +48,7 @@
       },
       "petition_threshold_reached": {
         "subject": "PawPrints - Petition Reaches Signature Threshold",
-        "template": "petition_threshold_reached"        
+        "template": "petition_threshold_reached"
       },
       "petition_response_received": {
         "subject": "PawPrints - A petition you signed has received a response",
@@ -58,21 +58,21 @@
         "subject": "PawPrints - A petition you signed has a status update",
         "template": "petition_status_update"
       }
-    },    
+    },
     "template_defaults": {
       "from": "web@rit.edu",
       "to": "web@rit.edu"
-    },    
+    },
     "template_overrides": {
       "to": "web@rit.edu"
     }
-  },  
+  },
   "public" : {
     "ui": {
       "roles_locked": false,
       "initials_locked": true,
       "carousel_images": ["/carousel_1.png", "/carousel_2.png", "/carousel_3.png"]
-    },  
+    },
     "ga": {
       "account":"UA-XXXXXXXX-Y"
     },
