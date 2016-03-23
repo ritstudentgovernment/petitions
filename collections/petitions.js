@@ -95,29 +95,34 @@ Meteor.methods({
 
     Petitions.update({
       _id: petitionId,
-      upvoters: {$ne: user._id},
-      subscribers: {$ne: user._id}
+      upvoters: {$ne: user._id}
     }, {
       $addToSet: {upvoters: user._id},
-      $addToSet: {subscribers: user._id},
       $inc: {votes: 1},
       $set: {lastSignedAt: new Date().getTime()}
     });
+    Petitions.update({
+      _id: petitionId,
+      subscribers: {$ne: user._id}
+    }, {
+      $addToSet: {subscribers: user._id}
+    });
+    if(Meteor.isServer){
+      if (petition.votes === petition.minimumVotes && Meteor.isServer) {
+        var users = Meteor.users.find({roles: {$in: ['notify-threshold-reached']}});
+        var emails = users.map(function (user) { return user.profile.mail || user.username + '@' + Meteor.settings.MAIL.default_domain; });
 
-    if (petition.votes === petition.minimumVotes && Meteor.isServer) {
-      var users = Meteor.users.find({roles: {$in: ['notify-threshold-reached']}});
-      var emails = users.map(function (user) { return user.profile.mail || user.username + '@' + Meteor.settings.MAIL.default_domain; });
-
-      if (!_.isEmpty(emails)) {
-        Mailer.sendTemplatedEmail(
-          "petition_threshold_reached",
-          {
-            to: emails
-          },
-          {
-            petition: petition
-          }
-        );
+        if (!_.isEmpty(emails)) {
+          Mailer.sendTemplatedEmail(
+            "petition_threshold_reached",
+            {
+              to: emails
+            },
+            {
+              petition: petition
+            }
+          );
+        }
       }
     }
 
@@ -172,19 +177,21 @@ Meteor.methods({
 
       this.unblock();
 
-      var notifyees = Meteor.users.find({$and: [{'notify.response': true},
-                                           {_id: {$in: oldPetition.subscribers}}]},
-                                    {fields: {username: 1}});
+      if(Meteor.isServer){
+        var notifyees = Meteor.users.find({$and: [{'notify.response': true},
+                                             {_id: {$in: oldPetition.subscribers}}]},
+                                      {fields: {username: 1}});
 
-      var emails = notifyees.map(function (user) { return user.username + Meteor.settings.MAIL.default_domain; });
+        var emails = notifyees.map(function (user) { return user.username + Meteor.settings.MAIL.default_domain; });
 
-      Mailer.sendTemplatedEmail("petition_response_received", {
-          bcc: emails
-        },{
-          petition: petition,
-          oldPetition: oldPetition
-        }
-      );
+        Mailer.sendTemplatedEmail("petition_response_received", {
+            bcc: emails
+          },{
+            petition: petition,
+            oldPetition: oldPetition
+          }
+        );
+      }
     }
   },
   delete: function (petitionId) {

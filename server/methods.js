@@ -31,29 +31,29 @@ Meteor.methods({
     Petitions.update(petitionId, {$set: {pending: false}});
     var users = Meteor.users.find({_id: {$in: petition.upvoters}},
                                   {fields: {username: 1}});
-    var emails = users.map(function (user) { return user.username + "@rit.edu"; });
+    var emails = users.map(function (user) { return user.username + Meteor.settings.MAIL.default_domain; });
     if(approved){
       Petitions.update(petitionId, {$set: {published: true,
         submitted: new Date().getTime()}});
-        
-        Mailer.sendTemplatedEmail("petition_approved", {   
+
+        Mailer.sendTemplatedEmail("petition_approved", {
             bcc: emails
-          }, { 
-            petition: petition 
+          }, {
+            petition: petition
           }
         );
-        
+
         return "Petition Approved!";
 
     }else{
-        Mailer.sendTemplatedEmail("petition_rejected", {   
+        Mailer.sendTemplatedEmail("petition_rejected", {
               bcc: emails
           },{
             petition: petition,
-            message: message  
+            message: message
           }
         );
-     
+
       return "Petition Rejected.";
     }
   }
