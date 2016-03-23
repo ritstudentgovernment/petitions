@@ -64,4 +64,4 @@ Mailer = {
             throw new Meteor.Error(500, 'There was a problem sending an email using the {0} template.  {1}.'.format(templateKey, e.toString()));
         }
     }
-}}
+}
