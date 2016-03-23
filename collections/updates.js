@@ -36,11 +36,18 @@ Meteor.methods({
     validateUpdate(updateAttrs, petition);
 
     var existingUpdates = Updates.find({petitionId: updateAttrs.petitionId});
+    var update = _.extend(_.pick(updateAttrs, 'title', 'description', 'petitionId'), {
+      created_at: new Date().getTime(),
+      updated_at: new Date().getTime(),
+      author: user.profile.name,
+      userId: user._id
+    });
 
-    if (_.isEmpty(petition.response)) {
-
-      Petitions.update(updateAttrs.petitionId, {$set: {status: "waiting-for-reply"}});
-
+    var updateId = Updates.insert(update);
+    if(Meteor.isServer){
+      if (_.isEmpty(petition.response)) {
+        Petitions.update(updateAttrs.petitionId, {$set: {status: "waiting-for-reply"}});
+      }
 
       var users = Meteor.users.find({$and: [{'notify.updates': true},
                                            {_id: {$in: petition.subscribers}}]},
@@ -53,19 +60,8 @@ Meteor.methods({
       }, {
         petition: petition
       });
-
     }
-    
-
-    var update = _.extend(_.pick(updateAttrs, 'title', 'description', 'petitionId'), {
-      created_at: new Date().getTime(),
-      updated_at: new Date().getTime(),
-      author: user.profile.name,
-      userId: user._id
-    });
-
-    var updateId = Updates.insert(update);
-
+    return updateId;
   },
   'editUpdate': function (updateAttrs) {
 
