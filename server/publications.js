@@ -8,7 +8,9 @@ var findPetitions = function (options) {
   sort.submitted = -1;
 
   // configure query selector
-  selector.status = {$in: [options.status]};
+  if (options.ignoreStatus == null || options.ignoreStatus == false){
+    selector.status = {$in: [options.status]};
+  }
   if (options.tagName) {
     selector.tag_ids = {$in: [Tags.findOne({name: options.tagName})._id]}
   }
@@ -48,7 +50,20 @@ Meteor.publish('petitions', function (limit, sortBy, tagName, showSigned, showCr
     tagName: tagName,
     userId: this.userId,
     showSigned: showSigned,
-    showCreated: showCreated
+    showCreated: showCreated,
+    status: null
+  });
+});
+
+Meteor.publish('petitionsSearch', function (limit, sortBy, tagName, showSigned, showCreated) {
+  return findPetitions.call(this, {
+    limit: limit,
+    sortBy: sortBy,
+    tagName: tagName,
+    userId: this.userId,
+    showSigned: showSigned,
+    showCreated: showCreated,
+    ignoreStatus: true
   });
 });
 
