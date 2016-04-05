@@ -2,7 +2,10 @@ Template.petitionEdit.events({
   'submit #petitionForm': function(e) {
     e.preventDefault();
     var styled_description = $('#summernote1').summernote('code');
-    var styled_response = $('#summernote3').summernote('code');
+    styled_response = null;
+    if ($('#summernote3').summernote('isEmpty') == false){
+        styled_response = $('#summernote3').summernote('code');
+    }
     var petitionProperties = {
       title: $(e.target).find('[name=title]').val(),
       description: styled_description,

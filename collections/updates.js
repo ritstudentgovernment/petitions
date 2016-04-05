@@ -16,8 +16,8 @@ var validateUpdate = function (updateAttrs, petition) {
   if (!updateAttrs.title || updateAttrs.title.length > 80)
     throw new Meteor.Error(422, "Title is longer than 80 characters or not present.");
 
-  if (!updateAttrs.description || updateAttrs.description.length > 10000)
-    throw new Meteor.Error(422, "Description is longer than 10000 characters or not present.");
+  if (!updateAttrs.description)
+    throw new Meteor.Error(422, "Description is not present.");
 
   if (!updateAttrs.petitionId)
     throw new Meteor.Error(422, "The title's petitionId is missing.");
