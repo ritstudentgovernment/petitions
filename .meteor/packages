@@ -20,8 +20,6 @@ manuelschoebel:ms-seo
 mrt:moment
 sacha:spin
 alanning:roles
-nemo64:bootstrap
-standard-minifiers
 
 
 npm-container
@@ -30,3 +28,6 @@ fileer:string-format
 meteorhacks:ssr
 
 summernote:standalone
+standard-minifier-css
+standard-minifier-js
+huttonr:bootstrap3

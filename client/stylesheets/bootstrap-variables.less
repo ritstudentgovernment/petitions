@@ -1,16 +1,14 @@
-// This File is for you to modify!
-// It won't be overwritten as long as it exists.
-// You may include this file into your less files to benefit from
-// mixins and variables that bootstrap provides.
 
-@import "custom.bootstrap.mixins.import.less";
+// These are custom bootstrap variables for you to edit.
+// These simply override any default bootstrap variables.
+// This means that you may delete anything in this file
+// and the default bootstrap values will be used instead.
 
 
-// @import "bootstrap/less/variables.less"
-//
-// Variables
-// --------------------------------------------------
-
+//== PawPrints Custom
+@light-gray:      #F5F5F5;
+@dark-gray:       #333;
+@main-background: #eee;
 
 //== Colors
 //
@@ -23,16 +21,13 @@
 @gray-light:             lighten(@gray-base, 46.7%); // #777
 @gray-lighter:           lighten(@gray-base, 93.5%); // #eee
 
-@light-gray:      #F5F5F5;
-@dark-gray:       #333;
-@main-background: #eee;
-
-@brand-primary:         #F36E21;
-@brand-secondary:       #513127;
+@brand-primary:         #f36e21;
+@brand-secondary:       #513127; //PawPrints custom
 @brand-success:         #513127;
 @brand-info:            #5bc0de;
 @brand-warning:         #f0ad4e;
 @brand-danger:          #d9534f;
+
 
 //== Scaffolding
 //
@@ -50,8 +45,6 @@
 //** Link hover decoration.
 @link-hover-decoration: underline;
 
-//Branding and overrides specific to the petition site, this file may not exist at runtime.
-@import (optional) "custom.branding.import.less";
 
 //== Typography
 //
@@ -62,6 +55,7 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:600);
 @font-family-sans-serif: 'Source Sans Pro', "Helvetica Neue", Helvetica, Arial, sans-serif;
 @font-family-serif:       Georgia, "Times New Roman", Times, serif;
+
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
 @font-family-base:        @font-family-sans-serif;
@@ -94,11 +88,11 @@
 //## Specify custom location and filename of the included Glyphicons icon font. Useful for those including Bootstrap via Bower.
 
 //** Load fonts from this directory.
-@icon-font-path:          "../fonts/";
+// '@icon-font-path' automatically set by Bootstrap package.
 //** File name for all font files.
-@icon-font-name:          "glyphicons-halflings-regular";
+// '@icon-font-name' automatically set by Bootstrap package.
 //** Element ID within SVG icon file.
-@icon-font-svg-id:        "glyphicons_halflingsregular";
+// '@icon-font-svg-id' automatically set by Bootstrap package.
 
 
 //== Components
@@ -117,7 +111,7 @@
 @padding-xs-vertical:       1px;
 @padding-xs-horizontal:     5px;
 
-@line-height-large:         1.33;
+@line-height-large:         1.3333333; // extra decimals for Win 8.1 Chrome
 @line-height-small:         1.5;
 
 @border-radius-base:        4px;
@@ -187,14 +181,16 @@
 @btn-danger-border:              darken(@btn-danger-bg, 5%);
 
 @btn-link-disabled-color:        @gray-light;
+
+// Allows for customizing button radius independently from global border radius
 @btn-border-radius-base:         @border-radius-base;
 @btn-border-radius-large:        @border-radius-large;
 @btn-border-radius-small:        @border-radius-small;
 
+
 //== Forms
 //
 //##
-@form-group-margin-bottom:       15px;
 
 //** `<input>` background color
 @input-bg:                       #fff;
@@ -208,6 +204,7 @@
 
 // TODO: Rename `@input-border-radius` to `@input-border-radius-base` in v4
 //** Default `.form-control` border radius
+// This has no effect on `<select>`s in some browsers, due to the limited stylability of `<select>`s in CSS.
 @input-border-radius:            @border-radius-base;
 //** Large `.form-control` border radius
 @input-border-radius-large:      @border-radius-large;
@@ -215,7 +212,7 @@
 @input-border-radius-small:      @border-radius-small;
 
 //** Border color for inputs on focus
-@input-border-focus:             @brand-primary;
+@input-border-focus:             #66afe9;
 
 //** Placeholder text color
 @input-color-placeholder:        #999;
@@ -226,6 +223,9 @@
 @input-height-large:             (ceil(@font-size-large * @line-height-large) + (@padding-large-vertical * 2) + 2);
 //** Small `.form-control` height
 @input-height-small:             (floor(@font-size-small * @line-height-small) + (@padding-small-vertical * 2) + 2);
+
+//** `.form-group` margin
+@form-group-margin-bottom:       15px;
 
 @legend-color:                   @gray-dark;
 @legend-border-color:            #e5e5e5;
@@ -286,8 +286,8 @@
 @zindex-popover:           1060;
 @zindex-tooltip:           1070;
 @zindex-navbar-fixed:      1030;
-@zindex-modal:             1040;
-@zindex-modal-background:  1035;
+@zindex-modal-background:  1040;
+@zindex-modal:             1050;
 
 
 //== Media queries breakpoints
@@ -339,7 +339,7 @@
 @grid-gutter-width:         30px;
 // Navbar collapse
 //** Point at which the navbar becomes uncollapsed.
-@grid-float-breakpoint:     @screen-desktop;
+@grid-float-breakpoint:     @screen-sm-min;
 //** Point at which the navbar begins collapsing.
 @grid-float-breakpoint-max: (@grid-float-breakpoint - 1);
 
@@ -400,7 +400,7 @@
 @navbar-default-toggle-border-color:       #ddd;
 
 
-// Inverted navbar
+//=== Inverted navbar
 // Reset inverted navbar basics
 @navbar-inverse-color:                      lighten(@gray-light, 15%);
 @navbar-inverse-bg:                         #222;
@@ -500,8 +500,8 @@
 @jumbotron-color:                inherit;
 @jumbotron-bg:                   @gray-lighter;
 @jumbotron-heading-color:        inherit;
-@jumbotron-heading-font-size:    ceil((@font-size-base * 2));
 @jumbotron-font-size:            ceil((@font-size-base * 1.5));
+@jumbotron-heading-font-size:    ceil((@font-size-base * 4.5));
 
 
 //== Form states and alerts
@@ -520,9 +520,9 @@
 @state-warning-bg:               #fcf8e3;
 @state-warning-border:           darken(spin(@state-warning-bg, -10), 5%);
 
-@state-danger-text:              #444;
-@state-danger-bg:                rgba(255,255,255,0.4);
-@state-danger-border:            @brand-secondary;
+@state-danger-text:              #a94442;
+@state-danger-bg:                #f2dede;
+@state-danger-border:            darken(spin(@state-danger-bg, -10), 5%);
 
 
 //== Tooltips
@@ -581,8 +581,6 @@
 //** Primary label background color
 @label-primary-bg:            @brand-primary;
 //** Success label background color
-@label-expired-bg:            @brand-secondary;
-//** Expired label background color
 @label-success-bg:            @brand-success;
 //** Info label background color
 @label-info-bg:               @brand-info;
@@ -877,5 +875,7 @@
 @page-header-border-color:    @gray-lighter;
 //** Width of horizontal description list titles
 @dl-horizontal-offset:        @component-offset-horizontal;
+//** Point at which .dl-horizontal becomes horizontal
+@dl-horizontal-breakpoint:    @grid-float-breakpoint;
 //** Horizontal line color.
 @hr-border:                   @gray-lighter;
