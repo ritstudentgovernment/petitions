@@ -1,0 +1,48 @@
+<template name="petitionCard">
+  <div class="square col-xs-12 col-sm-6 col-md-4 col-lg-4 {{#if petition.pending}}bg-warning{{/if}}">
+    <div class="square-content {{ petition.status }}">
+      <h4 class="petition-sign-count">
+        {{pluralize petition.votes "Signature"}}              
+      </h4>      
+      {{#if signedByUser petition}}
+        <span class="badge signed-badge pull-right"><i class="glyphicon glyphicon-ok"></i> signed</span>
+      {{/if}}  
+      <h3 class="petition-title">
+        {{#if isExpired this}}
+          {{#if isResponded petition}}
+            <a href="{{pathFor 'petitionPage' _id=petition._id }}">
+              {{petition.title}}
+            </a>
+          {{else}}
+            <a href="{{pathFor 'petitionPage' _id=petition._id }}"  style="color: #513127">
+              {{petition.title}}
+            </a>
+          {{/if}}
+
+        {{else}}
+          <a href="{{pathFor 'petitionPage' _id=petition._id }}">
+            {{petition.title}}
+          </a>
+        {{/if}}
+      </h3>
+      <p>
+      {{#each petition.tag_ids}}
+        {{#with tag this}}
+            {{#if isExpired ../..}}
+              {{#if isResponded ../../..}}
+                <a id="card" href="" name="{{this.name}}" class="label label-primary card-tag">{{upcase this.name}}</a>
+              {{else}}
+                <a id="card" href="" name="{{this.name}}" class="label label-success card-tag">{{upcase this.name}}</a>
+              {{/if}}
+            {{else}}
+              <a id="card" href="" name="{{this.name}}" class="label label-primary card-tag">{{upcase this.name}}</a>
+            {{/if}}
+        {{/with}}
+      {{/each}}
+      </p>
+      {{#if petition.pending}}
+        <a id="card" class="label label-danger card-tag"><i class="glyphicon glyphicon-warning-sign"></i> Pending Moderation</a>
+      {{/if}}
+    </div>
+  </div>
+</template>

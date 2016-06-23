@@ -1,4 +1,4 @@
-var findPosts = function (options) {
+var findPetitions = function (options) {
   var sort = {},
       selector = {};
 
@@ -8,15 +8,25 @@ var findPosts = function (options) {
   sort.submitted = -1;
 
   // configure query selector
-  selector.status = {$in: [options.status]};
+  if (options.ignoreStatus == null || options.ignoreStatus == false){
+    selector.status = {$in: [options.status]};
+  }
   if (options.tagName) {
     selector.tag_ids = {$in: [Tags.findOne({name: options.tagName})._id]}
   }
   if (!Roles.userIsInRole(options.userId, ['admin'])) {
     selector['published'] = true;
   }
-
-  return Posts.find(selector, {
+	
+  if (options.showSigned) {
+    selector.upvoters = options.userId;
+  }
+  
+  if (options.showCreated) {
+    selector.userId = options.userId;
+  }
+  
+  return Petitions.find(selector, {
     limit: options.limit,
     sort: sort,
     fields: {
@@ -25,57 +35,79 @@ var findPosts = function (options) {
       votes: 1,
       submitted: 1,
       status: 1,
-      tag_ids: 1
+      tag_ids: 1,
+      lastSignedAt: 1,
+      upvoters: 1,
+      pending: 1
     }
   });
 };
 
-Meteor.publish('posts', function (limit, sortBy, tagName) {
-  return findPosts({
+Meteor.publish('petitions', function (limit, sortBy, tagName, showSigned, showCreated) {
+  return findPetitions.call(this, {
     limit: limit,
     sortBy: sortBy,
     tagName: tagName,
-    userId: this.userId
+    userId: this.userId,
+    showSigned: showSigned,
+    showCreated: showCreated,
+    status: null
+  });
+});
+
+Meteor.publish('petitionsSearch', function (limit, sortBy, tagName, showSigned, showCreated) {
+  return findPetitions.call(this, {
+    limit: limit,
+    sortBy: sortBy,
+    tagName: tagName,
+    userId: this.userId,
+    showSigned: showSigned,
+    showCreated: showCreated,
+    ignoreStatus: true
   });
 });
 
 
-Meteor.publish('postsInProgress', function (limit, sortBy, tagName) {
-  return findPosts({
+Meteor.publish('petitionsInProgress', function (limit, sortBy, tagName, showSigned, showCreated) {
+  return findPetitions.call(this, {
     limit: limit,
     sortBy: sortBy,
     tagName: tagName,
     status: "waiting-for-reply",
-    userId: this.userId
+    userId: this.userId,
+    showSigned: showSigned,
+    showCreated: showCreated
   });
 });
 
-Meteor.publish('postsWithResponses', function (limit, sortBy, tagName) {
-  return findPosts({
+Meteor.publish('petitionsWithResponses', function (limit, sortBy, tagName, showSigned, showCreated) {
+  return findPetitions.call(this, {
     limit: limit,
     sortBy: sortBy,
     tagName: tagName,
     status: "responded",
-    userId: this.userId
+    userId: this.userId,
+    showSigned: showSigned,
+    showCreated: showCreated
   });
 });
 
-Meteor.publish('pendingPosts', function(){
+Meteor.publish('pendingPetitions', function(){
   if (Roles.userIsInRole(this.userId, ['admin', 'moderator'])) {
-    return Posts.find({pending: true});
+    return Petitions.find({pending: true});
   }else{
     this.stop();
     return;
   }
 });
 
-Meteor.publish('singlePost', function (id) {
+Meteor.publish('singlePetition', function (id) {
   var selector = {};
   selector["_id"] = id;
   if ((!Roles.userIsInRole(this.userId, ['admin', 'moderator']))) {
     selector['published'] = true;
   }
-  return Posts.find(selector, {
+  return Petitions.find(selector, {
     fields: {
       author: 1,
       title: 1,
@@ -85,6 +117,7 @@ Meteor.publish('singlePost', function (id) {
       response: 1,
       responded_at: 1,
       upvoters: 1,
+      subscribers: 1,
       minimumVotes: 1,
       status: 1,
       tag_ids: 1,
@@ -117,20 +150,10 @@ Meteor.publish('privilegedUsers', function () {
   }
 });
 
-Meteor.publish('singleScore', function (postId) {
-  return Scores.find({
-    postId: postId,
-    created_at: { $gte: moment().startOf('day').subtract(1, 'week').valueOf() }
-  }, {
-    limit: 7,
-    sort: {created_at: 1}
-  });
-});
-
-Meteor.publish('signers', function (postId) {
-  var post = Posts.findOne(postId);
-  if (post) {
-    return Meteor.users.find({_id: {$in: post.upvoters}}, {
+Meteor.publish('signatories', function (petitionId) {
+  var petition = Petitions.findOne(petitionId);
+  if (petition) {
+    return Meteor.users.find({_id: {$in: petition.upvoters}}, {
       fields: {
         "profile.initials": 1
       }
@@ -140,9 +163,9 @@ Meteor.publish('signers', function (postId) {
   }
 });
 
-Meteor.publish('updates', function (postId) {
+Meteor.publish('updates', function (petitionId) {
   return Updates.find(
-    { postId: postId },
+    { petitionId: petitionId },
     { fields:
       {
         title: 1,

@@ -1,4 +1,19 @@
-@import "_variables.import.less";
+@import "../bootstrap-variables.less";
+
+.container h1 {
+  color: @brand-primary;
+}
+
+.filter-checkboxes {
+    text-overflow: ellipsis;
+    overflow:hidden;
+    white-space:nowrap;
+    max-width: 300px;
+  .filter-checkbox {
+    padding:5px 10px;
+
+  }
+}
 
 .author {
   font-weight: 300;
@@ -39,9 +54,7 @@
   text-align: left;
   vertical-align: top;
   width: 100%;
-  @media (min-width: @screen-sm-min) {
-    margin-top: 25px;
-  }
+  margin-top: 25px;
 }
 
 .module-row {
@@ -72,7 +85,6 @@
 
 .petition-signature-module {
   @media (max-width: @screen-xs-max) {
-    display: none;
   }
 }
 
@@ -105,10 +117,17 @@
 
 .petition-sign-count {
   font-size: 18px;
+  display:inline-block;
+}
+
+.signed-badge {
+  padding: 7px 7px 9px 7px;
+  margin-left: 10px;
+  position: relative;
 }
 
 .petition-social-wrapper {
-  margin-bottom: 50px;
+  margin-bottom: 0px;
 }
 
 .petition-subtitle {
@@ -136,7 +155,7 @@
   }
 }
 
-.post-title-graph {
+.petition-title-graph {
   svg {
     @media (max-width: @screen-sm-min) {
       left: 90%;
@@ -166,25 +185,9 @@
   fill: #fff;
 }
 
-@keyframes popin {
-    from { opacity: 0; transform: scale(0.5);}
-    to   { opacity: 1; transform: scale(1);}
-}
-@-webkit-keyframes popin {
-    from { opacity: 0; -webkit-transform: scale(0.5);}
-    to   { opacity: 1; -webkit-transform: scale(1);}
-}
-@-moz-keyframes popin {
-    from { opacity: 0; -moz-transform: scale(0.5);}
-    to   { opacity: 1; -moz-transform: scale(1);}
-}
-
 .square {
   padding-bottom: 15px;
   padding-top: 15px;
-  animation: popin 0.5s;
-  -webkit-animation: popin 0.5s;
-  -moz-animation: popin 0.5s;
 }
 
 .square-content {
@@ -273,4 +276,9 @@
   font-style: italic;
   margin-top: 10px;
   bottom: 25px;
+}
+
+.petition-align-fix {
+  margin-right: 15px;
+  margin-left: 15px;
 }

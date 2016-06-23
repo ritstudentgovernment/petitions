@@ -17,9 +17,27 @@
       <strong>About Me</strong>
     </div>
     <div class="panel-body">
-      <p><strong>Username:</strong> {{ user.username }}</p>
-      <p><strong>Name:</strong> {{ user.profile.name }}</p>
-      <strong>Initials:</strong> {{ user.profile.initials }}
+      <form id='profile-form'>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Name:</strong> {{ user.profile.name }}</p>
+        <p>
+            <strong>Initials:</strong>
+            {{#if publicSettings.ui.initials_locked}}
+                {{ user.profile.initials }}
+            {{else}}
+                <input name="initials" value="{{ user.profile.initials }}" type="text" maxlength='5' />        
+            {{/if}}
+        </p>
+        <p><strong>Email:</strong> {{ user.profile.mail }}</p>
+        <p></p> 
+        {{#unless publicSettings.ui.initials_locked}}     
+            <div class="col-sm-12">
+            <input type="submit"
+                    class="btn btn-lg btn-primary no-margin full-width"
+                    value="Update Profile">
+            </div>
+        {{/unless}}
+      </form>
     </div>
   </div>
 </template>
@@ -30,13 +48,13 @@
       <strong>Notification Settings</strong>
     </div>
     <div class="panel-body">
-      <form>
+      <form id='notification-form'>
         <div class="checkbox">
           <label>
             <input name="notifyUpdates"
                    type="checkbox"
                    {{checked user.notify.updates}}>
-                   <p>E-mail me when new <strong>status updates</strong> are posted on petitions I sign, such as:</p>
+                   <p>E-mail me when new <strong>status updates</strong> are petitioned on petitions I sign, such as:</p>
                   <ul>
                     <li>The formation of SG committees to investigate petition topics.</li>
                     <li>Reachout efforts to members of the Administration.</li>
@@ -48,7 +66,7 @@
             <input name="notifyResponse"
                    type="checkbox"
                    {{checked user.notify.response}}>
-                   <p>E-mail me when an <strong>official responses</strong> is posted on a petition I sign.</p>
+                   <p>E-mail me when an <strong>official responses</strong> is petitioned on a petition I sign.</p>
           </label>
         </div>
         <div class="col-sm-12">

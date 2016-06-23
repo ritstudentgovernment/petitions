@@ -1,5 +1,5 @@
 <template name="header">
-  <nav class="header-background navbar navbar-default" role="navigation">
+  <nav class="header-background navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
       <div class="navbar-header">
         <a class="navbar-brand" href="{{pathFor 'index'}}" style="margin-top: -3px;">
@@ -17,16 +17,16 @@
       </div>
       <div class="collapse navbar-collapse" id="nav-collapse" style="border: 0;">
         <ul class="nav navbar-nav navbar-left">
-          <li class="{{ isActiveRoute 'postsInProgress' }}">
-            <a href="{{pathFor 'postsInProgress'}}">
-              <span class="glyphicon glyphicon-wrench"></span>
-              In Progress
+          <li class="{{ isActiveRoute 'petitionsInProgress' }}">
+            <a href="{{pathFor 'petitionsInProgress'}}">
+              <span class="glyphicon glyphicon-eye-open"></span>
+              Recognized
             </a>
           </li>
-          <li class="{{ isActiveRoute 'postsResponses' }}">
-            <a href="{{pathFor 'postsResponses'}}">
-              <span class="glyphicon glyphicon-comment"></span>
-              Responses
+          <li class="{{ isActiveRoute 'petitionsResponses' }}">
+            <a href="{{pathFor 'petitionsResponses'}}">
+              <span class="glyphicon glyphicon-ok"></span>
+              Responded
             </a>
           </li>
           <li class="{{ isActiveRoute 'about' }} {{ isActiveRoute 'petitionProcess' }} {{ isActiveRoute 'moderation' }} {{ isActiveRoute 'api' }}">
@@ -35,9 +35,9 @@
               About
             </a>
           </li>
-          <li class="{{ isActiveRoute 'postSubmit' }}">
-            <a href="{{pathFor 'postSubmit'}}">
-              <span class="glyphicon glyphicon-plus"></span>
+          <li class="{{ isActiveRoute 'petitionSubmit' }}">
+            <a href="{{pathFor 'petitionSubmit'}}">
+              <span class="glyphicon glyphicon-pencil"></span>
               Create
             </a>
           </li>

@@ -57,7 +57,7 @@ Handlebars.registerHelper('fromNow', function (time) {
   var timeTick = new Deps.Dependency();
   Meteor.setInterval(function () { timeTick.changed(); }, 1000);
   timeTick.depend();
-  return new moment(time).fromNow().toUpperCase();
+  return new moment(time).fromNow();
 });
 
 Handlebars.registerHelper('singleton', function () {
@@ -83,4 +83,8 @@ var routeUtils = {
 
 Handlebars.registerHelper('isActiveRoute', function(route) {
   return routeUtils.testRoutes(route) ? 'active' : '';
+});
+
+Handlebars.registerHelper('publicSettings', function(route) {
+  return Meteor.settings.public;
 });

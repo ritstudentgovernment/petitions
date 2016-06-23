@@ -1,0 +1,92 @@
+<template name="petitionPage">
+  <div class="container" style="background: white;width:100%!important;">
+    <div class="container">
+            <h1 class="long-string-fix text-center"><strong>{{petition.title}}</strong></h1>
+            <p class="text-center">
+              {{#each petition.tag_ids}}
+                {{#with tag this}}
+                  <span class="label label-primary">{{upcase this.name}}</span>
+                {{/with}}
+              {{/each}}
+              {{#if isInRole 'admin' 'moderator'}}
+                <a href="{{pathFor 'petitionEdit' _id=petition._id}}"><span class="label label-primary">EDIT</span></a>
+              {{/if}}
+              {{#if petition.pending}}
+                <span class="label label-danger"><span class="glyphicon glyphicon-warning-sign"></span> Pending Moderation</span>
+              {{/if}}
+            </p>
+            <div class="text-center" style="margin-bottom:15px;">
+              <p>Petition by {{petition.author}}</p>
+              {{#if show_history}}
+                {{#if updates}}
+                  {{#each updates}}
+                    <p>Update by {{this.author}}</p>
+                  {{/each}}
+                {{/if}}
+              {{/if}}
+            </div>
+    </div>
+  </div>
+  <div class="container application-content">
+    <div class="row" style="margin-bottom:15px;">
+      <div id="fullContent" class="col-md-12">
+        {{#if petition.response}}
+          <div class="row module-row">
+            <div class="col-md-12">
+              <div class="module module-white">
+                <h2 class="text-center"><strong>Official Response</strong></h2>
+                  <div class="petition-subtitle text-center">{{ responded_at }}</div>
+                  <hr />
+                  <p class="long-string-fix">{{{breaklines petition.response }}}</p>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+      </div>
+      <div id="leftContent" class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+        <!-- Petition Updates -->
+        {{#if updates}}
+          {{#each updates}}
+            <div class="module module-white">
+              {{> updateBlurb}}
+            </div>
+          {{/each}}
+        {{/if}}
+        <!-- Petition Body -->
+        <div class="module module-white">
+          <div class="petition-subtitle">
+            <strong>Description</strong>
+            <span class="pull-right">{{ submitted_at }}</span>
+          </div>
+          <hr />
+          <p class="long-string-fix">{{{breaklines petition.description}}}</p>
+        </div>
+        <!-- action bar on mobile -->
+        <div class="visible-xs hidden-sm hidden-md hidden-lg">
+          {{> actionBar}}
+        </div>
+        <!-- Petition Signatures -->
+        <div class="module module-white">
+          <div class="petition-subtitle">Signed by</div>
+          <hr />
+          <div style="overflow:scroll;">
+            <p>
+              <h6 class="petition-initials">
+                {{#each initials}}
+                  {{ this }}<br>
+                {{/each}}
+              </h6>
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- Action Bar -->
+      <div id="rightContent" class="hidden-xs col-sm-4 col-md-4 col-lg-4">
+        {{> actionBar}}
+      </div>
+    </div>
+  </div>
+  {{> petitionReport}}
+  {{> petitionReject}}
+  {{> petitionShareModal}}
+</template>

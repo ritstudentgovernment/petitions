@@ -11,19 +11,16 @@
 
 Updates = new Meteor.Collection('updates');
 
-var validateUpdate = function (updateAttrs, post) {
+var validateUpdate = function (updateAttrs, petition) {
 
   if (!updateAttrs.title || updateAttrs.title.length > 80)
     throw new Meteor.Error(422, "Title is longer than 80 characters or not present.");
 
-  if (!updateAttrs.description || updateAttrs.description.length > 4000)
-    throw new Meteor.Error(422, "Description is longer than 4000 characters or not present.");
+  if (!updateAttrs.description)
+    throw new Meteor.Error(422, "Description is not present.");
 
-  if (!updateAttrs.postId)
-    throw new Meteor.Error(422, "The title's postId is missing.");
-
-  if (post.status == "responded")
-    throw new Meteor.Error(422, "Updates can't be added to petitions with responses.");
+  if (!updateAttrs.petitionId)
+    throw new Meteor.Error(422, "The title's petitionId is missing.");
 
 };
 
@@ -35,35 +32,11 @@ Meteor.methods({
     if (!Roles.userIsInRole(user, ['admin', 'moderator']))
       throw new Meteor.Error(403, "You are not authorized to create updates.");
 
-    var post = Posts.findOne(updateAttrs.postId);
-    validateUpdate(updateAttrs, post);
+    var petition = Petitions.findOne(updateAttrs.petitionId);
+    validateUpdate(updateAttrs, petition);
 
-    var existingUpdates = Updates.find({postId: updateAttrs.postId});
-
-    if (_.isEmpty(post.response)) {
-
-      Posts.update(updateAttrs.postId, {$set: {status: "waiting-for-reply"}});
-
-      var users = Meteor.users.find({$and: [{'notify.updates': true},
-                                           {_id: {$in: post.upvoters}}]},
-                                    {fields: {username: 1}});
-      
-      var emails = users.map(function (user) { return user.username + "@rit.edu"; });
-
-      Email.send({
-        bcc: emails,
-        to: "sgnoreply@rit.edu",
-        from: "sgnoreply@rit.edu",
-        subject: "PawPrints - A petition you signed has a status update",
-        text: "Hello, \n\n" +
-              "Petition \"" + post.title + "\" by " + post.author + " has a status update: \n\n" +
-              Meteor.settings.public.root_url + "/petitions/" + post._id +
-              "\n\nThanks, \nRIT Student Government"
-      });
-
-    }
-
-    var update = _.extend(_.pick(updateAttrs, 'title', 'description', 'postId'), {
+    var existingUpdates = Updates.find({petitionId: updateAttrs.petitionId});
+    var update = _.extend(_.pick(updateAttrs, 'title', 'description', 'petitionId'), {
       created_at: new Date().getTime(),
       updated_at: new Date().getTime(),
       author: user.profile.name,
@@ -71,7 +44,24 @@ Meteor.methods({
     });
 
     var updateId = Updates.insert(update);
+    if(Meteor.isServer){
+      if (_.isEmpty(petition.response)) {
+        Petitions.update(updateAttrs.petitionId, {$set: {status: "waiting-for-reply"}});
+      }
 
+      var users = Meteor.users.find({$and: [{'notify.updates': true},
+                                           {_id: {$in: petition.subscribers}}]},
+                                    {fields: {username: 1}});
+
+      var emails = users.map(function (user) { return user.username + Meteor.settings.MAIL.default_domain; });
+
+      Mailer.sendTemplatedEmail("petition_status_update", {
+        bcc: emails
+      }, {
+        petition: petition
+      });
+    }
+    return updateId;
   },
   'editUpdate': function (updateAttrs) {
 
@@ -80,17 +70,17 @@ Meteor.methods({
     if (!Roles.userIsInRole(user, ['admin', 'moderator']))
       throw new Meteor.Error(403, "You are not authorized to edit updates.");
 
-    var post = Posts.findOne(updateAttrs.postId);
-    validateUpdate(updateAttrs, post);
+    var petition = Petitions.findOne(updateAttrs.petitionId);
+    validateUpdate(updateAttrs, petition);
 
-    var update = _.extend(_.pick(updateAttrs, 'title', 'description', 'postId'), {
+    var update = _.extend(_.pick(updateAttrs, 'title', 'description', 'petitionId'), {
       updated_at: new Date().getTime(),
       author: user.profile.name,
       userId: user._id
     });
 
     Updates.update(updateAttrs._id, {$set: update });
-    
+
   },
   'deleteUpdate': function (updateAttrs) {
 

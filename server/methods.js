@@ -1,5 +1,5 @@
 Meteor.methods({
-  report: function(postId, reason) {
+  report: function(petitionId, reason) {
 
     var user = Meteor.user();
 
@@ -9,57 +9,51 @@ Meteor.methods({
     if (!reason)
       throw new Meteor.Error(401, "You need to specify a reason for reporting the petition.");
 
-    var petition = Posts.findOne(postId);
+    var petition = Petitions.findOne(petitionId);
 
     if (petition) {
 
       this.unblock();
 
-      Email.send({
-        to: "sgweb@rit.edu",
-        from: "sgnoreply@rit.edu",
-        subject: "[petitions] Petition Reported",
-        text: "Petition \"" + petition.title + "\" by " + petition.author + " was reported as " + reason + "."
+      Mailer.sendTemplatedEmail("report_petition", {}, {
+        petition: petition,
+        reason: reason
       });
     }
 
   },
-  changePendingPost: function(postId, approved, message){
+  changePendingPetition: function(petitionId, approved, message){
     var user = Meteor.user()
     if (!Roles.userIsInRole(user, ['admin', 'moderator']))
-      throw new Meteor.Error(403, "You are not authorized to approve this post.");
+      throw new Meteor.Error(403, "You are not authorized to approve this petition.");
 
-    var post = Posts.findOne(postId);
-    Posts.update(postId, {$set: {pending: false}});
-    var users = Meteor.users.find({_id: {$in: post.upvoters}},
+    var petition = Petitions.findOne(petitionId);
+    Petitions.update(petitionId, {$set: {pending: false}});
+    var users = Meteor.users.find({_id: {$in: petition.upvoters}},
                                   {fields: {username: 1}});
-    var emails = users.map(function (user) { return user.username + "@rit.edu"; });
+    var emails = users.map(function (user) { return user.username + Meteor.settings.MAIL.default_domain; });
     if(approved){
-      Posts.update(postId, {$set: {published: true,
+      Petitions.update(petitionId, {$set: {published: true,
         submitted: new Date().getTime()}});
 
-        Email.send({
-          bcc: emails,
-          to: "sgnoreply@rit.edu",
-          from: "sgnoreply@rit.edu",
-          subject: "PawPrints - A petition you created has been approved",
-          text: "Hello, \n\n" +
-                "Petition \"" + post.title + "\" by " + post.author + " has been approved: \n\n" +
-                Meteor.settings.public.root_url + "/petitions/" + post._id +
-                "\n\nThanks, \nRIT Student Government"
-        });
+        Mailer.sendTemplatedEmail("petition_approved", {
+            bcc: emails
+          }, {
+            petition: petition
+          }
+        );
+
         return "Petition Approved!";
 
     }else{
-      Email.send({
-        bcc: emails,
-        to: "sgnoreply@rit.edu",
-        from: "sgnoreply@rit.edu",
-        subject: "PawPrints - A petition you created has been rejected",
-        text: "Hello, \n\n" +
-              "Petition \"" + post.title + "\" by " + post.author + " has been rejected for the following reasons: \n\n" +
-              message + "\n\nThanks, \nRIT Student Government"
-      });  
+        Mailer.sendTemplatedEmail("petition_rejected", {
+              bcc: emails
+          },{
+            petition: petition,
+            message: message
+          }
+        );
+
       return "Petition Rejected.";
     }
   }

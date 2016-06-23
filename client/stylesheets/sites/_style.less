@@ -1,5 +1,4 @@
-@import "../vendor/custom.bootstrap.import.less";
-@import "_variables.import.less";
+@import "../bootstrap-variables.less";
 
 body {
   background: @main-background;
@@ -45,10 +44,6 @@ input:-webkit-autofill {
   }
 }
 
-.btn-secondary {
-  .button-variant(@btn-primary-color; @brand-secondary; @brand-secondary);
-}
-
 .container-fluid {
   @media(max-width: @screen-xs-min) {
     padding: 0;
@@ -67,6 +62,16 @@ input.input-clear:not([type="submit"]):focus{
 input:not([type="submit"]):focus {
   -webkit-box-shadow: 0 0 0px 1000px white inset;
   box-shadow: 0 0 0px 1000px white inset;
+}
+
+input.input-clear[type="checkbox"]:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+input[type="checkbox"]:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 
 .full-width {

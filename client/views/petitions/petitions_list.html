@@ -1,0 +1,106 @@
+<template name="petitionsList">
+  <div class="application-content">
+    <div class="text-center" style="color:black;">
+      <h2>Open Petitions</h2>
+      <h4>Petitions that haven't been recognized or resolved by Student Government.</h4>
+    </div>
+    {{> petitionGroup petitions=petitions
+                      petitionOrder=petitionOrder
+                      title="Open/Expired Petitions"
+                      tags=tags
+                      nopetitions="Be the first to petition your government."
+                      displayheader=false}}
+  </div>
+</template>
+
+<template name="petitionsTagList">
+    {{> petitionGroup petitions=petitions
+                      petitionOrder=petitionOrder
+                      tag=this.tag
+                      tags=tags
+                      nopetitions="There are no petitions with that tag."
+                      displayheader=true }}
+</template>
+
+<template name="petitionsInProgressList">
+    {{> petitionGroup petitions=petitions
+                      petitionOrder=petitionOrder
+                      title="Recognized"
+                      description="These petitions are currently being worked on by Student Government. Status updates may be available on the petition page."
+                      tags=tags
+                      nopetitions="No petitions are currently in progress."
+                      displayheader=true }}
+</template>
+
+<template name="petitionsWithResponsesList">
+    {{> petitionGroup petitions=petitions
+                      petitionOrder=petitionOrder
+                      title="Responded"
+                      description="These petitions have received official responses."
+                      tags=tags
+                      nopetitions="No petitions have received responses."
+                      displayheader=true}}
+</template>
+
+
+<template name="petitionGroup">
+  {{#if displayheader}}
+    {{> headerCarousel title=tagTitle description=description}}
+  {{/if}}
+  <div class="container-fluid application-content">
+    <div class="petitions col-sm-10 col-sm-offset-1">
+      <div class="row">
+        {{#unless pending}}
+        <div class="col-md-3 col-sm-12">
+          <div class="col-md-12">
+            <h4 class="text-center"><strong>Sort</strong></h4>
+            <select id="petition-order" class="form-control input-lg">
+              {{#if equal title "Responded"}}
+              <option {{selected petitionOrder "responded_at"}} value="responded_at">Most Recent Responded</option>
+              {{/if}}
+              <option {{selected petitionOrder "submitted"}} value="submitted">Most Recent Submitted</option>
+              <option {{selected petitionOrder "lastSignedAt"}} value="lastSignedAt">Last Signed</option>
+              <option {{selected petitionOrder "votes"}} value="votes">Most Signatures</option>
+            </select>
+            <h4 class="text-center hidden-xs hidden-sm"><strong>Filter</strong></h4>
+            {{# if loggedIn}}
+              <div class="filter-checkboxes">
+                <div class="filter-checkbox">
+                  <input id='show-signed' type='checkbox' /> 
+                  <label for='show-signed'>My signed petitions</label>
+                </div>
+                {{# if moderation}}
+                    <div class="filter-checkbox">
+                    <input id='show-created' type='checkbox' /> 
+                    <label for='show-created'>My approved petitions</label>
+                    </div>
+                {{/if}}
+              </div>
+            {{/if}}
+            <div class="tag-box hidden-xs hidden-sm" id="tag-select">
+              <div class="list-group">
+                <a id="all" class="list-group-item {{ isActiveTag 'all' }} tag-item" href="">All</a>
+                {{#each this.tags}}
+                <a id="{{this.name}}" class="list-group-item {{ isActiveTag this.name }} tag-item" href="">{{this.name}}</a>
+                {{/each}}
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/unless}}
+        <div class="col-md-9 col-sm-12">
+          {{#each petitions}}
+            {{> petitionCard petition=this }}
+          {{/each}}
+          {{#if empty petitions}}
+            <div class="panel">
+              <p class="footer-subtitle text-center" style="margin: 50px 0;">
+                <p>{{ nopetitions }}</p>{{#unless pending}}<a href="{{pathFor 'petitionSubmit'}}">Create a petition.</a>{{/unless}}
+              </p>
+            </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
