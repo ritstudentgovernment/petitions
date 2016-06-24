@@ -2,13 +2,13 @@
   <div class="application-content">
     <div class="text-center" style="color:black;">
       <h2>Open Petitions</h2>
-      <h4>Petitions that haven't been recognized or resolved by Student Government.</h4>
+      <h4>Petitions that haven't been recognized or resolved.</h4>
     </div>
     {{> petitionGroup petitions=petitions
                       petitionOrder=petitionOrder
                       title="Open/Expired Petitions"
                       tags=tags
-                      nopetitions="Be the first to petition your government."
+                      nopetitions="Be the first to write a petition."
                       displayheader=false}}
   </div>
 </template>
@@ -26,7 +26,7 @@
     {{> petitionGroup petitions=petitions
                       petitionOrder=petitionOrder
                       title="Recognized"
-                      description="These petitions are currently being worked on by Student Government. Status updates may be available on the petition page."
+                      description="These petitions are currently being worked on. Status updates may be available on the petition page."
                       tags=tags
                       nopetitions="No petitions are currently in progress."
                       displayheader=true }}
@@ -36,7 +36,7 @@
     {{> petitionGroup petitions=petitions
                       petitionOrder=petitionOrder
                       title="Responded"
-                      description="These petitions have received official responses."
+                      description="These petitions have received responses."
                       tags=tags
                       nopetitions="No petitions have received responses."
                       displayheader=true}}
@@ -66,12 +66,12 @@
             {{# if loggedIn}}
               <div class="filter-checkboxes">
                 <div class="filter-checkbox">
-                  <input id='show-signed' type='checkbox' /> 
+                  <input id='show-signed' type='checkbox' />
                   <label for='show-signed'>My signed petitions</label>
                 </div>
                 {{# if moderation}}
                     <div class="filter-checkbox">
-                    <input id='show-created' type='checkbox' /> 
+                    <input id='show-created' type='checkbox' />
                     <label for='show-created'>My approved petitions</label>
                     </div>
                 {{/if}}
@@ -95,7 +95,7 @@
           {{#if empty petitions}}
             <div class="panel">
               <p class="footer-subtitle text-center" style="margin: 50px 0;">
-                <p>{{ nopetitions }}</p>{{#unless pending}}<a href="{{pathFor 'petitionSubmit'}}">Create a petition.</a>{{/unless}}
+                <p>{{ nopetitions }}</p>{{#unless pending}}<a href="{{pathFor 'petitionSubmit'}}">Write a petition.</a>{{/unless}}
               </p>
             </div>
           {{/if}}
