@@ -10,15 +10,11 @@
       <div id="about" class="panel-collapse collapse in">
         <div class="panel-body">
 
-          <p>Student Government provides a read-only JSON REST API for retreiving SG Petition information.</p>
+          <p>This service provides a read-only JSON REST API for retreiving petition information.</p>
 
-          <p>Developers utilizing the API should keep the stability of the API's infrastructure and their own applications in mind. We may impose usage limits at any time or degrade performance for developers who create an unreasonable number of requests.</p>
+          <p>Developers utilizing the API should keep the stability of the API's infrastructure and their own applications in mind. This API is not intended for production use. </p>
 
           <div class="alert alert-warning">
-
-            <p><strong>Availability:</strong> While we strive to maintain a highly available API, there may be times where it is unavailable for unanticipated causes. We encourage developers to write code that can handle these situations.</p>
-
-            <p><strong>Unpublished Petitions:</strong> At any time, administrators may choose to unpublish a petition (a decision that can be later reversed). Unpublished petitions are not visible publicly on the site, nor are they available via the API.</p>
 
             <p><strong>Developers:</strong> Claim an API Key by going to your <u><a href="{{pathFor 'userEdit'}}" style="color: inherit;">profile</a></u>.</p>
           </div>
