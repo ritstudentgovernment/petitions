@@ -20,6 +20,9 @@ Template.actionBar.helpers({
   'mustReachDate': function() {
     return new moment(this.petition.submitted).add(1, 'month').format('ll');
   },
+  'submittedDate': function(){
+    return moment(this.petition.submitted).format('ll');
+  },
   'petitionStatus': function () {
     var petition = Petitions.findOne();
     if (petition.status == "waiting-for-reply") {
