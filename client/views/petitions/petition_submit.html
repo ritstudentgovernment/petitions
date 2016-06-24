@@ -7,7 +7,7 @@
             <h2 class="petition-align-fix"><strong>Compose Petition</strong></h2>
             <div class="panel panel-default panel-body petition-align-fix">
               <p>We recommend reading our <a href="{{pathFor 'petitionProcess'}}">one-minute guide</a> on the Petition Process prior to making a submission.</p>
-              <div class="alert alert-warning no-margin">Be careful! You can't edit or delete a petition once it is submitted.</div>
+              <div class="alert alert-warning no-margin">Is this petition about a maintenance issue? Consider filing a <a href="https://www.rit.edu/fa/housing/content/submit-maintenance-request">housing</a> or <a href="https://sso.ecenterone.com/RIT/WO">FMS</a> ticket instead.</div>
               <br />
               <input name="title"
                      class="form-group form-control input-lg"
@@ -28,7 +28,9 @@
           </div>
           <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
               <div class="visible-xs hidden-sm hidden-md hidden-lg alert alert-warning petition-align-fix">Your full name will be made public with this petition. If you aren't comfortable with that, consider working with your SG senator/rep or a relevant administrator to have it posted from another account.</div>
+            <div class="alert alert-danger petition-align-fix">Be careful! You can't edit or delete a petition once it is submitted.</div>
             <p class="petition-align-fix">
+
               <input type="submit"
                      class="form-group btn btn-lg btn-primary"
                      value="Submit"
