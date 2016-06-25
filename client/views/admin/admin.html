@@ -1,23 +1,23 @@
 <template name="admin">
-
-  <div class="application-content container-fluid">
+  <div class="container-fluid">
     <div class="row-fluid">
-      <div class="col-sm-12 col-md-10 col-md-offset-1">
-
-       <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
+      <ul class="nav nav-tabs hidden-md hidden-lg" role="tablist">
           <li class="active"><a href="#users" role="tab" data-toggle="tab">Users</a></li>
           <li><a href="#settings" role="tab" data-toggle="tab">Settings</a></li>
-          <li><a href="#tags" role="tab" data-toggle="tab">Petition tags</a></li>
-          <li><a href="#interface" role="tab" data-toggle="tab">Interface</a></li>
+          <li><a href="#tags" role="tab" data-toggle="tab">Tags</a></li>
         </ul>
-
-        <!-- Tab panes -->
+      <div class="col-md-2 hidden-sm hidden-xs"  style="margin-top:15px">
+        <div class="list-group">
+          <a class="list-group-item" href="#users" role="tab" data-toggle="tab">Users</a>
+          <a class="list-group-item" href="#settings" role="tab" data-toggle="tab">Settings</a>
+          <a class="list-group-item" href="#tags" role="tab" data-toggle="tab">Tags</a>
+        </div>
+      </div>
+      <div class="col-sm-12 col-xs-12 col-md-10">
         <div class="tab-content">
           {{> users}}
           {{> settings}}
           {{> tags}}
-          {{> interface}}
         </div>
       </div>
     </div>
@@ -26,140 +26,197 @@
 
 <template name="users">
   <div class="tab-pane active" id="users">
+    <h2>User Management</h2>
+    <p>Assign users to roles for administration and moderation. Changes take effect immediately.</p>
+    <div class="alert alert-warning">Users must have logged in before they can be assigned roles here.</div>
     {{#if publicSettings.ui.roles_locked}}
         <div class="alert alert-warning" role="alert">
             <strong>Heads up!</strong> Users are automatically added and removed from groups when they log into the site.  Change someone's LDAP groups if you want them to be an admin or a moderator.
         </div>
     {{/if}}
-    <div class="col-sm-4">
-      <h2>Admins</h2>
-      <p>Administrators can manage user roles and petitions.</p>
-      {{> userList users=admins role="admin" }}
-    </div>
-    <div class="col-sm-4">
-      <h2>Moderators</h2>
-      <p>Moderators can edit or respond to petitions.</p>
-      {{> userList users=moderators role="moderator" }}
-    </div>
-    <div class="col-sm-4">
-      <h2>Notifiers</h2>
-      <p>Recieve an e-mail when petitions reaches their goal count.</p>
-      {{> userList users=notifiers role="notify-threshold-reached" }}
+    <div class="row">
+      <div class="col-md-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">Administrators</div>
+          <div class="panel-body">
+            <p>Administrators have full control over the functionality of PawPrints. They can manage roles, edit petitions, and moderate.</p>
+            <br />
+            {{> userList users=admins role="admin" }}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">Moderators</div>
+          <div class="panel-body">
+            <p>Moderators can edit, respond to, approve, and moderate petitions.</p>
+            <br />
+            {{> userList users=moderators role="moderator" }}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">Notification Subscribers</div>
+          <div class="panel-body">
+            <p>These users receive emails when petitions reach their goal.</p>
+            <br />
+            {{> userList users=notifiers role="notify-threshold-reached" }}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <template name="settings">
-  <div class="tab-pane setting-padding" id="settings">
+  <div class="tab-pane" id="settings">
     <h2>Settings</h2>
-    <div class="setting-padding">
-      <p>Minimum Signature Threshold: Changing the threshold only affects future petitions.</p>
-      <form id="thresholdForm">
-        <div class="input-group">
-          <input name="minimumThreshold"
-                 class="form-control"
-                 value="{{singleton.minimumThreshold}}"
-                 type="number"
-                 step="1">
-          <span class="input-group-btn">
-            <button class="btn btn-primary"
-                    type="submit"
-                    style="border-radius: 0;">
-                    Change
-            </button>
-          </span>
+    <hr />
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">Petition Handling</div>
+          <div class="panel-body">
+            <p>These settings control the petition process for the application.</p>
+            <hr />
+            <div class="form-horizontal">
+              <form id="thresholdForm">
+                <div class="form-group">
+                  <label for="minimumThreshold" class="col-sm-2 control-label">Petition Signature Goal</label>
+                  <div class="col-sm-10">
+                    <input name="minimumThreshold" class="form-control" value="{{singleton.minimumThreshold}}" type="number" step="1" aria-describedby="goalhelp">
+                    <p class="help-block" id="goalhelp"> Defines the signature goal for new petitions.</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-sm-offset-2 col-sm-10">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                  </div>
+                </div>
+              </form>
+              <hr />
+              <form id="changeModeration">
+                <div class="form-group">
+                  <label for="moderationInput" class="col-sm-2 control-label">Moderation control</label>
+                  <div class="col-sm-10">
+                    <input name="moderationInput" class="form-control" value="{{moderationStyle}}" type="string" readonly aria-describedby="modhelp">
+                    <p class="help-block" id="modhelp"> When enabled, petitions must be approved before being made public. Takes effect immediately for all new petitions.</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-sm-offset-2 col-sm-10">
+                    <button class="btn btn-primary" type="submit">Change</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-      </form>
+      </div>
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">Site Appearance</div>
+          <div class="panel-body">
+            <p>These settings control the appearance of the application in various areas.</p>
+            <hr />
+            <div class="form-horizontal">
+              <form id="changeParallax">
+                <div class="form-group">
+                  <label for="parallaxInput" class="col-sm-2 control-label">Parallax Hero Images</label>
+                  <div class="col-sm-10">
+                    <input name="parallaxInput" class="form-control" value="{{parallaxStyle}}" type="string" aria-describedby="parallaxhelp">
+                    <p class="help-block" id="parallaxhelp">When enabled, the large background images throughout the application will remained fixed when the user scrolls. This is useful for making the app look 'hip' and 'trendy'.</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-sm-offset-2 col-sm-10"><button class="btn btn-primary" type="submit">Change</button></div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">Petition Display</div>
+          <div class="panel-body">
+            <p>These settings control various aspects of how petitions are presented to users.</p>
+            <hr />
+            <div class="form-horizontal">
+              <form id="changePetitionHistoryDisplay">
+                <div class="form-group">
+                  <label for="petitionHistoryDisplayInput" class="col-sm-2 control-label">Show petition history/timeline</label>
+                  <div class="col-sm-10">
+                    <input name="petitionHistoryDisplayInput" class="form-control" value="{{petitionHistoryDisplayStyle}}" type="string" aria-describedby="historyhelp">
+                    <p class="help-block" id="historyhelp">When enabled, updates and responses are displayed underneath the petition author.</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-sm-offset-2 col-sm-10"><button class="btn btn-primary" type="submit">Change</button></div>
+                </div>
+              </form>
+              <hr />
+              <form id="changeUpdateAuthorDisplay">
+                <div class="form-group">
+                  <label for="updateAuthorDisplayInput" class="col-sm-2 control-label">Show update authors</label>
+                  <div class="col-sm-10">
+                    <input name="updateAuthorDisplayInput" class="form-control" value="{{updateAuthorDisplayStyle}}" type="string" aria-describedby="updateauthorhelp">
+                    <p class="help-block" id="updateauthorhelp">Controls whether the user who posted an update is displayed. This should be disabled in situations where one or two people post all updates.</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-sm-offset-2 col-sm-10"><button class="btn btn-primary" type="submit">Change</button></div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    {{> moderationButton}}
   </div>
 </template>
 
 <template name="tags">
   <div class="tab-pane" id="tags">
-    <h2>Petition Tags</h2>
-    <p>Manage tags.</p>
-    {{#each tags}}
-      <form id="tagDelete">
-        <div class="input-group">
-          <input class="input form-control"
-                 value="{{this.name}}"
-                 disabled>
-          <span class="input-group-btn">
-            <button class="btn btn-secondary" type="submit">&times;</button>
-          </span>
-        </div>
-      </form>
-    {{/each}}
-    <form id="newPetitionTag">
-      <div class="input-group">
-        <input name="name"
-               value=""
-               type="text"
-               placeholder="Tag name..."
-               class="form-control">
-        <span class="input-group-btn">
-          <button class="btn btn-primary"
-                  type="submit">+
-                  </button>
-        </span>
+    <h2>Tags</h2>
+    <p>Tags allow your users to categorize their petitions and find petitions relevant to their interests.</p>
+    <div class="panel panel-default">
+      <div class="panel-heading">Manage Existing Tags</div>
+      <div class="panel-body">
+        <div class="alert alert-danger">Deleting a tag will remove it from all petitions immediately. Think twice.</div>
+        {{#each tags}}
+          <form id="tagDelete">
+            <div class="input-group">
+              <input class="input form-control"
+                     value="{{this.name}}"
+                     disabled>
+              <span class="input-group-btn">
+                <button class="btn btn-secondary" type="submit">&times;</button>
+              </span>
+            </div>
+          </form>
+        {{/each}}
       </div>
-    </form>
-  </div>
-</template>
+      <div class="panel-footer">
+        <form id="newPetitionTag">
+          <div class="input-group">
+            <input name="name"
+                   value=""
+                   type="text"
+                   placeholder="Tag name..."
+                   class="form-control">
+            <span class="input-group-btn">
+              <button class="btn btn-primary"
+                      type="submit">+
+                      </button>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
 
-<template name="interface">
-  <div class="tab-pane" id="interface">
-    <h2>User Interface</h2>
-    <p>Manage UI settings.</p>
-        <form id="changeParallax" class="form-inline">
-          <div class="form-group">
-            <label >Parallax Carousel Images:</label>
-            <input name="parallaxInput"
-                   class="form-control"
-                   value="{{parallaxStyle}}"
-                   type="string"
-                   step="1"
-                   readonly>
-              <button class="btn btn-primary"
-                      type="submit"
-                      style="border-radius: 0;">
-                      Toggle
-              </button>
-          </div>
-        </form>
-        <form id="changePetitionHistoryDisplay" class="form-inline">
-          <div class="form-group">
-            <label >Petition History Display:</label>
-            <input name="petitionHistoryDisplayInput"
-                   class="form-control"
-                   value="{{petitionHistoryDisplayStyle}}"
-                   type="string"
-                   step="1"
-                   readonly>
-              <button class="btn btn-primary"
-                      type="submit"
-                      style="border-radius: 0;">
-                      Toggle
-              </button>
-          </div>
-        </form>
-        <form id="changeUpdateAuthorDisplay" class="form-inline">
-          <div class="form-group">
-            <label>Display Update Author:</label>
-            <input name="updateAuthorDisplayInput"
-                   class="form-control"
-                   value="{{updateAuthorDisplayStyle}}"
-                   type="string"
-                   step="1"
-                   readonly>
-              <button class="btn btn-primary"
-                      type="submit"
-                      style="border-radius: 0;">
-                      Toggle
-              </button>
-          </div>
-        </form>
+
   </div>
 </template>
 

@@ -58,7 +58,7 @@ Template.admin.events({
   }
 });
 
-Template.interface.events({
+Template.settings.events({
   'submit #changeParallax': function(e){
     e.preventDefault();
     Meteor.call('toggleParallax');
@@ -70,10 +70,14 @@ Template.interface.events({
   'submit #changeUpdateAuthorDisplay': function(e){
     e.preventDefault();
     Meteor.call('toggleUpdateAuthorDisplay');
+  },
+  'submit #changeModeration': function(e){
+    e.preventDefault();
+    Meteor.call('toggleModeration');
   }
 });
 
-Template.interface.helpers({
+Template.settings.helpers({
   'parallaxStyle' : function(){
     if(Singleton.findOne().parallax){
       return 'Enabled'
@@ -90,6 +94,13 @@ Template.interface.helpers({
   },
   'updateAuthorDisplayStyle' : function(){
     if(Singleton.findOne().updateAuthorDisplay){
+      return 'Enabled'
+    }else{
+      return 'Disabled'
+    }
+  },
+  'moderationStyle' : function(){
+    if(Singleton.findOne().moderation){
       return 'Enabled'
     }else{
       return 'Disabled'
