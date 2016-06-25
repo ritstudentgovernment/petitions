@@ -44,17 +44,9 @@
           <li>
             <a class="" href="{{pathFor 'search'}}">
               <span class="glyphicon glyphicon-search"></span>
-              Search
+              
             </a>
           </li>
-          {{#if moderationEnabled }}
-          <li class="{{ isActiveRoute 'moderate'}}">
-            <a href="{{pathFor 'moderate'}}">
-              <span class="glyphicon glyphicon-list-alt"></span>
-              Moderate
-            </a>
-          </li>
-          {{/if}}
         </ul>
         <ul class="nav navbar-nav navbar-right">
           {{#if currentUser}}
@@ -74,6 +66,14 @@
                        Admin
                     </a>
                   </li>
+                {{/if}}
+                {{#if moderationEnabled }}
+                <li class="{{ isActiveRoute 'moderate'}}">
+                  <a href="{{pathFor 'moderate'}}">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Moderate
+                  </a>
+                </li>
                 {{/if}}
                 <li class="{{ isActiveRoute 'userEdit' }}">
                   <a href="{{pathFor 'userEdit'}}">
