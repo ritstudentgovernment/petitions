@@ -9,9 +9,15 @@ Template.petitionPage.helpers({
     timeTick.depend();
     return new moment(this.petition.responded_at).fromNow();
   },
+  'responded_date':function(){
+    return new moment(this.petition.responded_at).format('MMMM Do YYYY, h:mm a');
+  },
   'submitted_at': function () {
     timeTick.depend();
     return new moment(this.petition.submitted).fromNow();
+  },
+  'submitted_date': function () {
+    return new moment(this.petition.submitted).format('MMMM Do YYYY, h:mm a');
   },
   'initials': function () {
     return Meteor.users.find({

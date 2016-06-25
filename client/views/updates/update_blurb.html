@@ -1,6 +1,6 @@
 <template name="updateBlurb">
   <h3 class="update-title text-center">{{this.title}}</h3>
-  <p class="petition-subtitle text-center">{{#if showAuthor}}Update by {{this.author}} - {{/if}}{{fromNow this.created_at}} </p>
+  <p class="petition-subtitle text-center" title="{{submitted_date}}">{{#if showAuthor}}Update by {{this.author}} - {{/if}}{{fromNow this.created_at}} &nbsp; <span style="font-size:8pt" class="glyphicon glyphicon-calendar"></span></p>
   <hr />
   <p>{{{breaklines this.description }}}</p>
 </template>

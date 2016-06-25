@@ -35,7 +35,7 @@
             <div class="col-md-12">
               <div class="module module-white">
                 <h2 class="text-center"><strong>Official Response</strong></h2>
-                  <div class="petition-subtitle text-center">{{ responded_at }}</div>
+                  <div class="petition-subtitle text-center"><span title="{{responded_date}}">{{ responded_at }} &nbsp; <span class="glyphicon glyphicon-calendar"></span></span></div>
                   <hr />
                   <p class="long-string-fix">{{{breaklines petition.response }}}</p>
               </div>
@@ -56,7 +56,7 @@
         <div class="module module-white">
           <div class="petition-subtitle">
             <strong>Description</strong>
-            <span class="pull-right">{{ submitted_at }}</span>
+            <span class="pull-right"  title="{{submitted_date}}">{{ submitted_at }} &nbsp; <span style="font-size:8pt" class="glyphicon glyphicon-calendar"></span> </span>
           </div>
           <hr />
           <p class="long-string-fix">{{{breaklines petition.description}}}</p>
