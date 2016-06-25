@@ -5,7 +5,6 @@ var findPetitions = function (options) {
   // configure sort parameters
 
   sort[options.sortBy] = -1;
-  sort.submitted = -1;
 
   // configure query selector
   if (options.ignoreStatus == null || options.ignoreStatus == false){
