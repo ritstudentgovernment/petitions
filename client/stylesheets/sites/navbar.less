@@ -8,9 +8,16 @@
   .navbar-nav > .active > a,
   .navbar-nav > .active > a:hover,
   .navbar-nav > .dropdown .active {
-    background: @main-background;
+    background: @brand-secondary;
+    color: @brand-primary;
   }
-  background: white;
+  
+  .navbar-nav > li > a{
+    color: @brand-secondary;
+    background: @brand-primary;
+  }
+  
+  background: @main-background;
   border: none;
   margin-bottom: 0;
   @media (min-width: @screen-sm-min) {
